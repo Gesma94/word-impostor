@@ -1,4 +1,4 @@
-import { useNavigate } from '@solidjs/router';
+import { A, useNavigate } from '@solidjs/router';
 import type { JSX } from 'solid-js'
 import { createSignal } from 'solid-js'
 
@@ -16,7 +16,7 @@ function generateRoomId() {
     return roomId;
 }
 
-export const Home = () => {
+export const CreateRoom = () => {
     const navigate = useNavigate();
     const roomId = generateRoomId();
 
@@ -44,9 +44,7 @@ export const Home = () => {
         <input id='secretWord' value={impostorWord()} onInput={handleImpostorWordChange} />
         <button onclick={handleCreateRoomClick}>Create Room</button>
         <hr />
-        <p>Or, join an existing room</p>
-        {import.meta.env.VITE_SERVER_BASE_URL}
-        {import.meta.env.VITE_SERVER_BASE_WS_URL}
+        <p>Or, <A href='/join-room'>join an existing room</A></p>
       </div>
     </div>
   )

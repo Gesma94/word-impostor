@@ -1,4 +1,4 @@
-name: [Server] Build 🏗️
+name: Server - Build 🏗️
 
 env:
   VITE_SERVER_BASE_URL: ${{ secrets.VITE_SERVER_BASE_URL }}

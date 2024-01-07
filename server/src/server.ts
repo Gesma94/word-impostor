@@ -215,7 +215,7 @@ function handleStartRoom(socket: WebSocket, connectionId: string, roomId: string
     }
 
     const room = rooms[roomId];
-    const players = Object.values(rooms[roomId].connections);
+    const players = Object.values(rooms[roomId].connections).filter(x => !x.isAdmin);
     const impostorIndex = getImpostorIndex(players.length);
 
     players.forEach((player, index) => {

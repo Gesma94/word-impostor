@@ -36,27 +36,6 @@ wsServer.on('connection', socket => {
                 // should only happen client side
                 break;
         }
-        // if (data.event === WS_MESSAGE_EVENT_CREATE_ROOM) {
-        //     return;
-        // }
-
-        // if (data.event === WS_MESSAGE_EVENT_JOIN_ROOM) {
-        //     const hasJoined = handleJoinRoom(socket, connectionUuid, data.payload.roomId, data.payload.username);
-
-        //     if (!hasJoined) {
-        //         return;
-        //     }
-
-        //     Object.entries(rooms[data.payload.roomId].users)
-        //         .filter(x => x[1].connectionUuid !== connectionUuid)
-        //         .forEach(x => x[1].socket.send(JSON.stringify({ event: 'player-joined', payload: { username: data.payload.username } })))
-        // }
-
-        // if (data.event === 'start') {
-        //     Object.entries(rooms[data.payload.roomId].users)
-        //     .filter(x => x[1].connectionUuid !== connectionUuid)
-        //     .forEach(x => x[1].socket.send(JSON.stringify({ event: 'start', payload: { word: 'random Word' } })))
-        // }
     })
 });
 

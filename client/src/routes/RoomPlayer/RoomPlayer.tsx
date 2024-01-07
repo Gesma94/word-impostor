@@ -6,17 +6,17 @@ import { WS_MESSAGE_EVENT_ROOM_STARTED } from '../../common/constants';
 
 
 export const RoomPlayer = () => {
-    let webSocket : WebSocket;
+  let webSocket: WebSocket;
 
-    const params = useParams<TRoomPlayerParams>();
-    const [searchParams] = useSearchParams<TRoomPlayerSearchParams>();
+  const params = useParams<TRoomPlayerParams>();
+  const [searchParams] = useSearchParams<TRoomPlayerSearchParams>();
 
-    const [playersInRoom] = createSignal<string[]>([]);
-    const [secretWord, setSecretWord] = createSignal<string | null>(null);
+  const [playersInRoom] = createSignal<string[]>([]);
+  const [secretWord, setSecretWord] = createSignal<string | null>(null);
 
 
   const handleMessage = (e: MessageEvent) => {
-    const message : IWebSocketMessage = JSON.parse(e.data);
+    const message: IWebSocketMessage = JSON.parse(e.data);
 
     switch (message.event) {
       case WS_MESSAGE_EVENT_ROOM_STARTED:
@@ -37,26 +37,26 @@ export const RoomPlayer = () => {
     if (!searchParams.username) {
       return <p>"error"</p>
     }
-    
-    
-    const wsEventCreateRoom : IWsJoinRoomMessage = {
-        event: 'join-room',
-        payload: {
-          username: searchParams.username ?? '',
-          roomId: params.roomId
-        }
+
+
+    const wsEventCreateRoom: IWsJoinRoomMessage = {
+      event: 'join-room',
+      payload: {
+        username: searchParams.username ?? '',
+        roomId: params.roomId
       }
-  
-      webSocket.send(JSON.stringify(wsEventCreateRoom));
-}
+    }
+
+    webSocket.send(JSON.stringify(wsEventCreateRoom));
+  }
   onMount(async () => {
     let a = import.meta.env.VITE_SERVER_BASE_WS_URL;
     webSocket = new WebSocket(a);
 
-    
+
     webSocket.addEventListener('message', handleMessage);
     webSocket.addEventListener('open', handleOpenWsConnection);
-  });  
+  });
 
   return (
     <div class='h-full grid place-content-center'>
@@ -65,10 +65,10 @@ export const RoomPlayer = () => {
         <hr />
         <p>{playersInRoom().length} players</p>
         <For each={playersInRoom()}>
-            {player => <p>{player}</p>}
+          {player => <p>{player}</p>}
         </For>
         <Show when={secretWord() !== null}>
-            <p>Your secret word is {secretWord()}</p>
+          <p>Your secret word is {secretWord()}</p>
         </Show>
       </div>
     </div>

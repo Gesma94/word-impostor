@@ -173,8 +173,7 @@ function handleJoinRoom(webSocket: WebSocket, connectionUuid: string, roomId: st
 
     Object.entries(rooms[roomId].connections)
         .filter(x => x[1].uuid !== connectionUuid)
-        .forEach(x => x[1].socket.send(JSON.stringify(message)))
-
+        .forEach(x => x[1].socket.send(JSON.stringify(message)));
 }
 
 function handleCreateRoom(socket: WebSocket, connectionId: string, roomId: string, secretWord: string, impostorWord: string) {

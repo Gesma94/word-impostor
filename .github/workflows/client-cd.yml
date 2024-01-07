@@ -17,6 +17,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     
+    - name: Echo1
+      run: echo "vars.VITE_SERVER_BASE_URL is ${{ vars.VITE_SERVER_BASE_URL }}"
+
     - name: Setup Node.js v20.x
       uses: actions/setup-node@v3
       with:
@@ -28,8 +31,8 @@ jobs:
     - name: NPM Build
       run: npm run build
       env:
-        VITE_SERVER_BASE_URL: ${{ secrets.VITE_SERVER_BASE_URL }}
-        VITE_SERVER_BASE_WS_URL: ${{ secrets.VITE_SERVER_BASE_WS_URL }}
+        VITE_SERVER_BASE_URL: ${{ vars.VITE_SERVER_BASE_URL }}
+        VITE_SERVER_BASE_WS_URL: ${{ vars.VITE_SERVER_BASE_WS_URL }}
   
     - name: Deploy To Netlify
       uses: South-Paw/action-netlify-deploy@v1.2.0

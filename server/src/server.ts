@@ -2,10 +2,10 @@ import { randomUUID } from 'crypto';
 import express, { response } from 'express';
 import type { Request, Response } from "express";
 import { Database, OPEN_CREATE, OPEN_READWRITE, RunResult, Statement, verbose } from 'sqlite3';
-import { WS_MESSAGE_EVENT_CREATE_ROOM, WS_MESSAGE_EVENT_JOIN_ROOM, WS_MESSAGE_EVENT_PLAYER_JOIN, WS_MESSAGE_EVENT_START_ROOM } from 'word-impostor-common/src/constants';
-import type { IWebSocketMessage, IWsPlayerJoinedMessage, IWsRoomStartedMessage, SqliteTableCounter, TRoomStore } from 'word-impostor-common/src/schemas';
 import { Server } from 'ws';
 import type { RawData, WebSocket } from 'ws';
+import { IWebSocketMessage, IWsPlayerJoinedMessage, IWsRoomStartedMessage, SqliteTableCounter, TRoomStore } from './schemas';
+import { WS_MESSAGE_EVENT_CREATE_ROOM, WS_MESSAGE_EVENT_JOIN_ROOM, WS_MESSAGE_EVENT_START_ROOM, WS_MESSAGE_EVENT_PLAYER_JOIN } from './constants';
 
 const app = express();
 const port = process.env.PORT || 7717;

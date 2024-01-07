@@ -17,7 +17,15 @@ wsServer.on('connection', socket => {
     const connectionUuid = randomUUID();
 
     socket.on('message', (data: RawData, isBinary: boolean) => {
-        const message: IWebSocketMessage = JSON.parse(data.toString());
+        let  message: IWebSocketMessage;
+        
+        try {
+            message = JSON.parse(data.toString());
+        }
+        catch (error) {
+            console.log(error);
+            return;
+        }
 
         switch (message.event) {
             case WS_MESSAGE_EVENT_CREATE_ROOM:

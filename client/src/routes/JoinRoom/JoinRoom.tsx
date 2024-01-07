@@ -30,7 +30,7 @@ const navigate = useNavigate();
         <input id='roomId' value={roomId()} onInput={handleSecretWordChange} />
         <label for='secretWord'>Username:</label>
         <input id='secretWord' value={username()} onInput={handleUsernameChange} />
-        <button onclick={handleJoinRoomClick}>Create Room</button>
+        <button onclick={handleJoinRoomClick}>Join Room</button>
         <hr />
         <p>Or, <A href='/create-room'>create a room</A></p>
 

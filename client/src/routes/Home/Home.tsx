@@ -46,6 +46,7 @@ export const Home = () => {
         <hr />
         <p>Or, join an existing room</p>
         {import.meta.env.VITE_SERVER_BASE_URL}
+        {import.meta.env.VITE_SERVER_BASE_WS_URL}
       </div>
     </div>
   )

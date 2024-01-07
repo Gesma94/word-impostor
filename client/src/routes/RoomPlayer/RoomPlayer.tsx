@@ -1,8 +1,8 @@
 import { useParams, useSearchParams } from '@solidjs/router';
 import { For, Show, createSignal, onMount } from 'solid-js'
 import { TRoomPlayerParams, TRoomPlayerSearchParams } from './RoomPlayer.schemas';
-import { IWebSocketMessage, IWsJoinRoomMessage } from 'word-impostor-common/src/schemas';
-import { WS_MESSAGE_EVENT_ROOM_STARTED } from 'word-impostor-common/src/constants';
+import { IWebSocketMessage, IWsJoinRoomMessage } from '../../common/schemas';
+import { WS_MESSAGE_EVENT_ROOM_STARTED } from '../../common/constants';
 
 
 export const RoomPlayer = () => {

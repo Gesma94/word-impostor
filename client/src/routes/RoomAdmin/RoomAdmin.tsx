@@ -2,8 +2,8 @@ import { useParams, useSearchParams } from '@solidjs/router';
 import type { JSX } from 'solid-js'
 import { For, Show, createSignal, onMount } from 'solid-js'
 import { TRoomParams, TRoomSearchParams } from './RoomAdmin.schemas';
-import { IWebSocketMessage, IWsCreateRoomMessage, IWsStartRoomMessage } from 'word-impostor-common/src/schemas';
-import { WS_MESSAGE_EVENT_PLAYER_JOIN } from 'word-impostor-common/src/constants';
+import { WS_MESSAGE_EVENT_PLAYER_JOIN } from '../../common/constants';
+import { IWsStartRoomMessage, IWebSocketMessage, IWsCreateRoomMessage } from '../../common/schemas';
 
 
 export const RoomAdmin = () => {

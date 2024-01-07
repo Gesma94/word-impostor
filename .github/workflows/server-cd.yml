@@ -1,0 +1,21 @@
+name: [Server] Build 🏗️
+
+env:
+  VITE_SERVER_BASE_URL: ${{ secrets.VITE_SERVER_BASE_URL }}
+  VITE_SERVER_BASE_WS_URL: ${{ secrets.VITE_SERVER_BASE_WS_URL }}
+  
+on:
+  push:
+    branches: [ "main" ]
+    paths: [ "server/**", "common/**" ]
+
+jobs:      
+  DeployOnRender:
+    runs-on: ubuntu-latest
+
+    steps:        
+    - name: Deploy To Render
+      uses: johnbeynon/render-deploy-action@v0.0.8
+      with:
+        api-key: ${{ secrets.RENDER_API_KEY }}
+        service-id: ${{ secrets.RENDER_SERVICE_ID }}

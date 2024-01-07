@@ -1,8 +1,8 @@
 name: Server - Build 🏗️
 
 env:
-  VITE_SERVER_BASE_URL: ${{ secrets.VITE_SERVER_BASE_URL }}
-  VITE_SERVER_BASE_WS_URL: ${{ secrets.VITE_SERVER_BASE_WS_URL }}
+  RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+  RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
   
 on:
   push:

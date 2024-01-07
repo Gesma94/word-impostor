@@ -1,0 +1,15 @@
+{
+  "name": "word-impostor-common",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matteo Gesmundo",
+  "license": "MIT",
+  "dependencies": {
+    "@types/ws": "^8.5.10",
+    "ws": "^8.16.0"
+  }
+}

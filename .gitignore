@@ -1,0 +1,16 @@
+# Root
+.vscode
+
+# Client App
+/client/.vscode
+/client/dist
+/client/node_modules
+/client/.env.development
+/client/.env.production
+
+# Common
+/common/node_modules
+
+# Server App
+/server/dist
+/server/node_modules

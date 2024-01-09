@@ -1,11 +1,14 @@
 import type { JSX } from 'solid-js'
-import { A, useNavigate, useParams } from '@solidjs/router';
 import { generateRoomId } from './CreateRoom.funcs';
 import { createRenderEffect, createSignal } from 'solid-js';
+import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router';
+import { PARAM_KEY_ARE_RANDOM_WORD, PARAM_KEY_IMPOSTOR_HAS_HINT, PARAM_KEY_IMPOSTOR_WORD, PARAM_KEY_IS_MASTER_PLAYING, PARAM_KEY_ROOM_RESET_GUID, PARAM_KEY_SECRET_WORD } from '../../common/constants';
 
-/** Defines the search parameters of {@link CreateRoom} */
 type TCreateRoomParams = {
-    roomId?: string;
+    roomId: string;
+}
+
+type TCreateRoomSearchParams = {
     roomResetGuid?: string;
 }
 
@@ -13,6 +16,7 @@ export const CreateRoom = () => {
     const navigate = useNavigate();
     const params = useParams<TCreateRoomParams>();
     const roomId = params.roomId ?? generateRoomId();
+    const [searchParams] = useSearchParams<TCreateRoomSearchParams>();
     
     const [secretWord, setSecretWord] = createSignal('');
     const [impostorWord, setImpostorWord] = createSignal('');
@@ -45,20 +49,20 @@ export const CreateRoom = () => {
 
         const searchParms = new URLSearchParams();
         const innerAreWordRandom = areWordRandom();
-
+      
         if (innerAreWordRandom) {
-            searchParms.append('areRandomWord', innerAreWordRandom.toString());
+            searchParms.append(PARAM_KEY_ARE_RANDOM_WORD, innerAreWordRandom.toString());
         }
         else {
-            searchParms.append('secretWord', secretWord());
-            searchParms.append('impostorWord', impostorWord());
+            searchParms.append(PARAM_KEY_SECRET_WORD, secretWord());
+            searchParms.append(PARAM_KEY_IMPOSTOR_WORD, impostorWord());
         }
 
-        searchParms.append('isMasterPlaying', isMasterPlaying().toString());
-        searchParms.append('impostorHasHint', impostorHasHint().toString());
+        searchParms.append(PARAM_KEY_IS_MASTER_PLAYING, isMasterPlaying().toString());
+        searchParms.append(PARAM_KEY_IMPOSTOR_HAS_HINT, impostorHasHint().toString());
 
-        if (params.roomResetGuid) {
-            searchParms.append('roomResetGuid', params.roomResetGuid);
+        if (searchParams?.roomResetGuid) {
+            searchParms.append(PARAM_KEY_ROOM_RESET_GUID, searchParams.roomResetGuid);
         }
 
         navigate(`/room/${roomId}/admin?${searchParms.toString()}`);

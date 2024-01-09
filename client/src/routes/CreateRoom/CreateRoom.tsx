@@ -1,17 +1,24 @@
-import { A, useNavigate } from '@solidjs/router';
 import type { JSX } from 'solid-js'
-import { createRenderEffect, createSignal } from 'solid-js'
+import { A, useNavigate, useParams } from '@solidjs/router';
 import { generateRoomId } from './CreateRoom.funcs';
+import { createRenderEffect, createSignal } from 'solid-js';
+
+/** Defines the search parameters of {@link CreateRoom} */
+type TCreateRoomParams = {
+    roomId?: string;
+    roomResetGuid?: string;
+}
 
 export const CreateRoom = () => {
     const navigate = useNavigate();
-    const roomId = generateRoomId();
-
-    const [secretWord, setSecretWord] = createSignal('Gelato');
-    const [impostorHasHint, setImpostorHasHint] = createSignal(false);
-    const [masterRole, setMasterRole] = createSignal<'active' | 'passive'>('passive');
+    const params = useParams<TCreateRoomParams>();
+    const roomId = params.roomId ?? generateRoomId();
+    
+    const [secretWord, setSecretWord] = createSignal('');
+    const [impostorWord, setImpostorWord] = createSignal('');
     const [areWordRandom, setAreWordRandom] = createSignal(false);
-    const [impostorWord, setImpostorWord] = createSignal('Ghiacciolo');
+    const [impostorHasHint, setImpostorHasHint] = createSignal(false);
+    const [isMasterPlaying, setIsMasterPlaying] = createSignal(false);
 
     const handleSecretWordChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
         setSecretWord(e.currentTarget.value);
@@ -21,51 +28,44 @@ export const CreateRoom = () => {
         setImpostorWord(e.currentTarget.value);
     }
 
-    const handleImpostorHintChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
+    const handleImpostorHasHintChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
         setImpostorHasHint(e.currentTarget.checked);
     }
 
-    const handleMasterRoleChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
-        const newValue = e.currentTarget.value;
-
-        if (newValue !== 'active' && newValue !== 'passive') {
-            return;
-        }
-
-        setMasterRole(newValue);
+    const handleIsMasterPlayingChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
+        setIsMasterPlaying(e.currentTarget.value === 'masterIsPlaying');
     }
 
-    const handleWordRandomChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
-        const newValue = e.currentTarget.value;
-
-        if (newValue === 'random') {
-            setAreWordRandom(true);
-        }
-        else if (newValue === 'fixed') {
-            setAreWordRandom(false);
-        }
+    const handleAreWordRandomChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
+        setAreWordRandom(e.currentTarget.value === 'randomWord');
     }
 
-    const handleCreateRoomClick: JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (_) => {
+    const handleFormSubmit: JSX.EventHandler<HTMLFormElement, Event> = (e) => {
+        e.preventDefault();
+
         const searchParms = new URLSearchParams();
+        const innerAreWordRandom = areWordRandom();
 
-        if (areWordRandom()) {
-            searchParms.append('areRandomWord', 'true');
+        if (innerAreWordRandom) {
+            searchParms.append('areRandomWord', innerAreWordRandom.toString());
         }
         else {
-            searchParms.append('areRandomWord', 'false');
             searchParms.append('secretWord', secretWord());
             searchParms.append('impostorWord', impostorWord());
         }
 
-        searchParms.append('impostorHasHint', impostorHasHint() ? 'true' : 'false');
-        searchParms.append('masterRole', masterRole());
+        searchParms.append('isMasterPlaying', isMasterPlaying().toString());
+        searchParms.append('impostorHasHint', impostorHasHint().toString());
+
+        if (params.roomResetGuid) {
+            searchParms.append('roomResetGuid', params.roomResetGuid);
+        }
 
         navigate(`/room/${roomId}/admin?${searchParms.toString()}`);
     }
 
     createRenderEffect(() => {
-        if (masterRole() === 'active') {
+        if (isMasterPlaying()) {
             setAreWordRandom(true);
         }
     });
@@ -73,26 +73,69 @@ export const CreateRoom = () => {
     return (
         <div class='h-full grid place-content-center'>
             <div class='w-[320px]'>
-                <label for='activeMaster'>Active Master</label>
-                <input id='activeMaster' name='activeMaster' type='radio' value={'active'} checked={masterRole() === 'active'} onInput={handleMasterRoleChange} />
-                <label for='passiveMaster'>Passive Master</label>
-                <input id='passiveMaster' name='activeMaster' type='radio' value={'passive'} checked={masterRole() === 'passive'} onInput={handleMasterRoleChange} />
-                <br />
-                <label for='impostorHint'>Impostor has hint</label>
-                <input id='impostorHint' type='checkbox' checked={impostorHasHint()} onInput={handleImpostorHintChange} />
-                <br />
-                <label for='randomWord'>Random Word</label>
-                <input id='randomWord' name='randomWord' type='radio' value={'random'} checked={areWordRandom()} onInput={handleWordRandomChange} disabled={masterRole() === 'active'} />
-                <label for='fixedWord'>Fixed Word</label>
-                <input id='fixedWord' name='fixedWord' type='radio' value={'fixed'} checked={!areWordRandom()} onInput={handleWordRandomChange} disabled={masterRole() === 'active'} />   
-                <br />
-                <label for='secretWord'>Secret Word:</label>
-                <input id='secretWord' value={secretWord()} onInput={handleSecretWordChange} disabled={areWordRandom()} />
-                <br />
-                <label for='secretWord'>Impostor Word:</label>
-                <input id='secretWord' value={impostorWord()} onInput={handleImpostorWordChange} disabled={areWordRandom()} />
-                <br />
-                <button onClick={handleCreateRoomClick}>Create Room</button>
+                <form onSubmit={handleFormSubmit}>
+                    <label for='masterIsPlaying'>Master is playing</label>
+                    <input
+                        type='radio'
+                        id='masterIsPlaying'
+                        name='masterIsPlaying'
+                        value='masterIsPlaying'
+                        checked={isMasterPlaying()}
+                        onInput={handleIsMasterPlayingChange} />
+                    <label for='masterNotPlaying'>Master is not playing</label>
+                    <input
+                        type='radio'
+                        id='masterNotPlaying'
+                        name='masterNotPlaying'
+                        value='masterNotPlaying'
+                        checked={!isMasterPlaying()}
+                        onInput={handleIsMasterPlayingChange} />
+                    <br />
+                    <label for='impostorHint'>Impostor has hint</label>
+                    <input
+                        type='checkbox'
+                        id='impostorHint'
+                        name='impostorHint'
+                        checked={impostorHasHint()}
+                        onInput={handleImpostorHasHintChange} />
+                    <br />
+                    <label for='randomWord'>Random Word</label>
+                    <input
+                        type='radio'
+                        id='randomWord'
+                        name='randomWord'
+                        value='randomWord'
+                        checked={areWordRandom()}
+                        disabled={isMasterPlaying()}
+                        onInput={handleAreWordRandomChange} />
+                    <label for='fixedWord'>Fixed Word</label>
+                    <input
+                        type='radio'
+                        id='fixedWord'
+                        name='fixedWord'
+                        value='fixedWord'
+                        checked={!areWordRandom()}
+                        disabled={isMasterPlaying()}
+                        onInput={handleAreWordRandomChange} />
+                    <br />
+                    <label for='secretWord'>Secret Word:</label>
+                    <input
+                        id='secretWord'
+                        name='secretWord'
+                        value={secretWord()}
+                        disabled={areWordRandom()}
+                        onInput={handleSecretWordChange} />
+                    <br />
+                    <label for='secretWord'>Impostor Word:</label>
+                    <input
+                        id='impostorWord'
+                        name='impostorWord'
+                        value={impostorWord()}
+                        disabled={areWordRandom()}
+                        onInput={handleImpostorWordChange} />
+                    <br />
+                    <button type='submit'>Create Room</button>
+                </form>
                 <hr />
                 <p>Or, <A href='/join-room'>join an existing room</A></p>
             </div>

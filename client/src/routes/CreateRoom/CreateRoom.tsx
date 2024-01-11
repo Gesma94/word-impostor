@@ -18,7 +18,7 @@ export const CreateRoom = () => {
 
     const params = useParams<TCreateRoomParams>();
 
-    const [isWsOpen, setIsWsOpen] = createSignal(false);
+    const [_, setIsWsOpen] = createSignal(false);
     const [secretWord, setSecretWord] = createSignal('');
     const [currentRound, setCurrentRound] = createSignal(0);
     const [impostorWord, setImpostorWord] = createSignal('');

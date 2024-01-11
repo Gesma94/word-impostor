@@ -1,26 +1,30 @@
 import type { JSX } from 'solid-js'
 import { generateRoomId } from './CreateRoom.funcs';
-import { createRenderEffect, createSignal } from 'solid-js';
-import { A, useNavigate, useParams, useSearchParams } from '@solidjs/router';
-import { PARAM_KEY_ARE_RANDOM_WORD, PARAM_KEY_IMPOSTOR_HAS_HINT, PARAM_KEY_IMPOSTOR_WORD, PARAM_KEY_IS_MASTER_PLAYING, PARAM_KEY_ROOM_RESET_GUID, PARAM_KEY_SECRET_WORD } from '../../common/constants';
+import { For, Show, createRenderEffect, createSignal, onMount } from 'solid-js';
+import { A, useNavigate, useParams } from '@solidjs/router';
+import { IWebSocketMessage, IWsCreateRoomMessage, IWsStartRoomMessage } from '../../common/schemas';
 
 type TCreateRoomParams = {
     roomId: string;
 }
 
-type TCreateRoomSearchParams = {
-    roomResetGuid?: string;
+type TPlayer = {
+    guid: string;
+    username: string;
 }
 
 export const CreateRoom = () => {
-    const navigate = useNavigate();
+    let webSocket: WebSocket;
+
     const params = useParams<TCreateRoomParams>();
-    const roomId = params.roomId ?? generateRoomId();
-    const [searchParams] = useSearchParams<TCreateRoomSearchParams>();
-    
+
+    const [isWsOpen, setIsWsOpen] = createSignal(false);
     const [secretWord, setSecretWord] = createSignal('');
+    const [currentRound, setCurrentRound] = createSignal(0);
     const [impostorWord, setImpostorWord] = createSignal('');
-    const [areWordRandom, setAreWordRandom] = createSignal(false);
+    const [players, setPlayers] = createSignal<TPlayer[]>([]);
+    const [wordToPlayWith, setWordToPlayWith] = createSignal('');
+    const [areWordsRandom, setAreWordsRandom] = createSignal(false);
     const [impostorHasHint, setImpostorHasHint] = createSignal(false);
     const [isMasterPlaying, setIsMasterPlaying] = createSignal(false);
 
@@ -41,43 +45,106 @@ export const CreateRoom = () => {
     }
 
     const handleAreWordRandomChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
-        setAreWordRandom(e.currentTarget.value === 'randomWord');
+        setAreWordsRandom(e.currentTarget.value === 'randomWord');
     }
 
-    const handleFormSubmit: JSX.EventHandler<HTMLFormElement, Event> = (e) => {
+    const handleStartRound: JSX.EventHandler<HTMLFormElement, Event> = (e) => {
         e.preventDefault();
 
-        const searchParms = new URLSearchParams();
-        const innerAreWordRandom = areWordRandom();
-      
-        if (innerAreWordRandom) {
-            searchParms.append(PARAM_KEY_ARE_RANDOM_WORD, innerAreWordRandom.toString());
-        }
-        else {
-            searchParms.append(PARAM_KEY_SECRET_WORD, secretWord());
-            searchParms.append(PARAM_KEY_IMPOSTOR_WORD, impostorWord());
-        }
-
-        searchParms.append(PARAM_KEY_IS_MASTER_PLAYING, isMasterPlaying().toString());
-        searchParms.append(PARAM_KEY_IMPOSTOR_HAS_HINT, impostorHasHint().toString());
-
-        if (searchParams?.roomResetGuid) {
-            searchParms.append(PARAM_KEY_ROOM_RESET_GUID, searchParams.roomResetGuid);
+        const wsStartRoomMessage: IWsStartRoomMessage = {
+            event: 'start-room',
+            payload: {
+                roomId: params.roomId,
+                secretWord: secretWord(),
+                impostorWord: impostorWord(),
+                areWordsRandom: areWordsRandom(),
+                impostorHasHint: impostorHasHint(),
+                isMasterPlaying: isMasterPlaying(),
+            }
         }
 
-        navigate(`/room/${roomId}/admin?${searchParms.toString()}`);
+        webSocket.send(JSON.stringify(wsStartRoomMessage));
+    }
+
+    const handleWsPlayerJoin = (guid: string, username: string) => {
+        setPlayers(prev => [...prev, { guid, username }]);
+    }
+
+    const handleWsPlayerLeave = (guid: string) => {
+        setPlayers(prev => {
+            const indexToRemove = prev.findIndex(x => x.guid === guid);
+
+            if (indexToRemove !== -1) {
+                prev.splice(indexToRemove, 1);
+                return [...prev];
+            }
+
+            return prev;
+        })
+    }
+
+    const handleWsRoomStart = (wordToPlayWith: string) => {
+        setCurrentRound(prev => prev + 1);
+        setWordToPlayWith(wordToPlayWith);
+    }
+
+    const handleWsOpen = (_: Event) => {
+        setIsWsOpen(true);
+
+        const wsCreateRoomMessage: IWsCreateRoomMessage = {
+            event: 'create-room',
+            payload: {
+                roomId: params.roomId
+            }
+        }
+
+        webSocket.send(JSON.stringify(wsCreateRoomMessage));
+    }
+
+    const handleWsError = (_: Event) => {
+        setIsWsOpen(false);
+    }
+
+    const handleWsClose = (_: Event) => {
+        setIsWsOpen(false);
+    }
+
+    const handleWsMessage = (e: MessageEvent) => {
+        const message : IWebSocketMessage = JSON.parse(e.data);
+
+        if (message.event === 'player-joined') {
+            handleWsPlayerJoin(message.payload.guid, message.payload.username);
+        }
+        if (message.event === 'player-left') {
+            handleWsPlayerLeave(message.payload.guid);
+        }
+        if (message.event === 'room-started') {
+            handleWsRoomStart(message.payload.knownWord)
+        }
     }
 
     createRenderEffect(() => {
         if (isMasterPlaying()) {
-            setAreWordRandom(true);
+            setAreWordsRandom(true);
         }
+    });
+
+    onMount(async () => {
+        const wsUrl = import.meta.env.VITE_SERVER_BASE_WS_URL;
+
+        webSocket = new WebSocket(wsUrl);
+
+        webSocket.addEventListener('open', handleWsOpen);
+        webSocket.addEventListener('error', handleWsError);
+        webSocket.addEventListener('close', handleWsClose);
+        webSocket.addEventListener('message', handleWsMessage);
     });
 
     return (
         <div class='h-full grid place-content-center'>
             <div class='w-[320px]'>
-                <form onSubmit={handleFormSubmit}>
+                <h1>Room {params.roomId}{currentRound() > 0 ? ` - Round ${currentRound()}` : ''}</h1>
+                <form onSubmit={handleStartRound}>
                     <label for='masterIsPlaying'>Master is playing</label>
                     <input
                         type='radio'
@@ -109,7 +176,7 @@ export const CreateRoom = () => {
                         id='randomWord'
                         name='randomWord'
                         value='randomWord'
-                        checked={areWordRandom()}
+                        checked={areWordsRandom()}
                         disabled={isMasterPlaying()}
                         onInput={handleAreWordRandomChange} />
                     <label for='fixedWord'>Fixed Word</label>
@@ -118,7 +185,7 @@ export const CreateRoom = () => {
                         id='fixedWord'
                         name='fixedWord'
                         value='fixedWord'
-                        checked={!areWordRandom()}
+                        checked={!areWordsRandom()}
                         disabled={isMasterPlaying()}
                         onInput={handleAreWordRandomChange} />
                     <br />
@@ -127,7 +194,7 @@ export const CreateRoom = () => {
                         id='secretWord'
                         name='secretWord'
                         value={secretWord()}
-                        disabled={areWordRandom()}
+                        disabled={areWordsRandom()}
                         onInput={handleSecretWordChange} />
                     <br />
                     <label for='secretWord'>Impostor Word:</label>
@@ -135,14 +202,35 @@ export const CreateRoom = () => {
                         id='impostorWord'
                         name='impostorWord'
                         value={impostorWord()}
-                        disabled={areWordRandom()}
+                        disabled={areWordsRandom()}
                         onInput={handleImpostorWordChange} />
                     <br />
-                    <button type='submit'>Create Room</button>
+                    <button type='submit'>Start Game</button>
                 </form>
+                <hr />
+                <p>{players().length} players</p>
+                <For each={players()}>
+                    {player => <p>{player.username}</p>}
+                </For>
+                <hr />
+                <Show when={isMasterPlaying()}>
+                    <Show when={wordToPlayWith() !== ''}><p>Your word is {wordToPlayWith()}</p></Show>
+                    <Show when={wordToPlayWith() === ''}><p>Waiting for your word to play</p></Show>
+                </Show>
                 <hr />
                 <p>Or, <A href='/join-room'>join an existing room</A></p>
             </div>
         </div>
     )
+}
+
+export const CreateRoomWithoutId = () => {
+    const roomId = generateRoomId();
+    const navigate = useNavigate();
+
+    onMount(() => {
+        navigate(`/create-room/${roomId}`);
+    });
+
+    return <div>loading</div>
 }

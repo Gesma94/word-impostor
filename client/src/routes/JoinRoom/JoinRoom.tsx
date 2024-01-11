@@ -18,7 +18,7 @@ const navigate = useNavigate();
   }
 
   const handleJoinRoomClick : JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (_) => {
-    navigate(`/room/${roomId()}/player?username=${username()}`);
+    navigate(`/room/${roomId()}/player?username=${username()}&guid=${uuidv4()}`);
   }
 
   return (
@@ -37,4 +37,13 @@ const navigate = useNavigate();
       </div>
     </div>
   )
+}
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+  .replace(/[xy]/g, function (c) {
+      const r = Math.random() * 16 | 0, 
+          v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+  });
 }

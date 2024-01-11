@@ -6,7 +6,7 @@ import { Server } from 'ws';
 import type { RawData, WebSocket } from 'ws';
 import { IWebSocketMessage, IWsPlayerJoinedMessage, IWsRoomStartedMessage, SqliteTableCounter, TRoomStore, WsJoinRoomPayload, WsRoomStartedPayload, WsStartRoomPayload } from './schemas';
 import { WS_MESSAGE_EVENT_JOIN_ROOM, WS_MESSAGE_EVENT_START_ROOM, WS_MESSAGE_EVENT_PLAYER_JOIN, WS_MESSAGE_EVENT_CREATE_ROOM } from './constants';
-import { words } from '../assets/words';
+import { words } from './words';
 
 const app = express();
 const port = process.env.PORT || 7717;

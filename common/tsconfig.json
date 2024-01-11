@@ -1,9 +1,14 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "target": "esnext",
+    "module": "commonjs",   
     "declaration": true, 
     "declarationMap": true,
-    "rootDir": ".",   
-    "composite": true,
-  },
-  "references": []
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true
+  }
 }

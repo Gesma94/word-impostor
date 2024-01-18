@@ -11,3 +11,6 @@ export const PARAM_KEY_ARE_RANDOM_WORD = 'areRandomWord';
 export const PARAM_KEY_ROOM_RESET_GUID = 'roomResetGuid';
 export const PARAM_KEY_IS_MASTER_PLAYING = 'isMasterPlaying';
 export const PARAM_KEY_IMPOSTOR_HAS_HINT = 'impostorHasHint';
+
+export const SEARCH_PARAM_KEY_UUID = 'uuid';
+export const SEARCH_PARAM_KEY_USERNAME = 'username';

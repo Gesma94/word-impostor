@@ -1,16 +1,12 @@
 import type { JSX } from 'solid-js'
-import { generateRoomId } from './CreateRoom.funcs';
 import { For, Show, createRenderEffect, createSignal, onMount } from 'solid-js';
 import { A, useNavigate, useParams } from '@solidjs/router';
 import { IWebSocketMessage, IWsCreateRoomMessage, IWsStartRoomMessage } from '../../common/schemas';
+import { TPlayer } from '../../common/types';
+import Utils from '../../common/Utils';
 
 type TCreateRoomParams = {
     roomId: string;
-}
-
-type TPlayer = {
-    guid: string;
-    username: string;
 }
 
 export const CreateRoom = () => {
@@ -225,7 +221,7 @@ export const CreateRoom = () => {
 }
 
 export const CreateRoomWithoutId = () => {
-    const roomId = generateRoomId();
+    const roomId = Utils.generateRoomId();
     const navigate = useNavigate();
 
     onMount(() => {

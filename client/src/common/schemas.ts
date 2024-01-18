@@ -6,7 +6,7 @@ type WsMessageBase<TEvent extends string, TPayload> = {
     payload: TPayload;
 }
 
-type WsJoinRoomPayload = {
+export type WsJoinRoomPayload = {
     guid: string;
     roomId: string;
     username: string;
@@ -26,6 +26,7 @@ export type WsStartRoomPayload = {
 }
 
 export type WsRoomStartedPayload = {
+    round: number;
     roomId: string;
     knownWord: string;
     impostorHint: boolean;
@@ -60,17 +61,16 @@ export type TRoomStore = {
 
 export type TRoom = {
     roomId: string;
-    roound: number;
-    secretWord: string;
-    impostorWord: string;
-    connections: {
-        [key: string]: TConnection;
+    round: number;
+    players: {
+        [key: string]: TRoomPlayer;
     };
 }
 
-export type TConnection = {
+export type TRoomPlayer = {
     uuid: string;
     isAdmin: boolean;
     username: string | null;
+    guid?: string;
     socket: WebSocket;
 }

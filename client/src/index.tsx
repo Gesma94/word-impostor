@@ -1,7 +1,7 @@
 import { render } from 'solid-js/web'
 import './index.css'
-import { Router, Route, Navigate } from '@solidjs/router'
-import { CreateRoom, CreateRoomWithoutId } from './routes/CreateRoom/CreateRoom';
+import { Router, Route } from '@solidjs/router'
+import { CreateRoom } from './routes/CreateRoom/CreateRoom';
 import { Room } from './routes/Room/Room';
 import { JoinRoom } from './routes/JoinRoom/JoinRoom';
 import { Home } from './routes/Home/Home';

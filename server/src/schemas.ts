@@ -62,12 +62,12 @@ export type TRoomStore = {
 export type TRoom = {
     roomId: string;
     round: number;
-    connections: {
-        [key: string]: TConnection;
+    players: {
+        [key: string]: TRoomPlayer;
     };
 }
 
-export type TConnection = {
+export type TRoomPlayer = {
     uuid: string;
     isAdmin: boolean;
     username: string | null;

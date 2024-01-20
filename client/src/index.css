@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-    p {
-      @apply text-textBgLight;
-    }
-}
-
 body {
   margin: 0;
   height: 100lvh;
@@ -16,4 +10,10 @@ body {
 
 #root {
   height: 100lvh;
+}
+
+button {
+  @apply bg-red;
+  @apply px-4 py-2 text-white rounded-lg font-semibold;
+  margin: 1px solid 
 }

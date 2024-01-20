@@ -1,17 +1,20 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: [ "./src/*.{ts,tsx}", "./src/**/*.{ts,tsx}" ],
-  theme: {
-    colors: {
-      bgDark: '#333333',
-      bgLight: '#f5f5f5',
-      redLight: '#f39c8e',
-      red: '#e74c3c',
-      darkDark: '#c0392b',
-      textBgLight: '#333333'
+module.exports = {
+    content: [
+      "./src/**/*.{js,jsx,ts,tsx}",
+    ],
+    theme: {
+      extend: {},
+      colors: {
+        'transparent': 'transparent',
+        'white': '#e2e8f0',
+        'textColor': '#1f2937',
+        'red':'#f87171',
+        'dark-red': '#b91c1c',
+      },
+      screens: {
+        small: { max: '768px'}
+      }
     },
-    extend: {},
-  },
-  plugins: [],
-}
-
+    plugins: [],
+  }

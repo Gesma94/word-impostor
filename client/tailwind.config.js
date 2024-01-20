@@ -8,9 +8,10 @@ module.exports = {
       colors: {
         'transparent': 'transparent',
         'white': '#e2e8f0',
-        'textColor': '#1f2937',
+        'color': '#374151',
         'red':'#f87171',
         'dark-red': '#b91c1c',
+        'blue': '#2563eb'
       },
       screens: {
         small: { max: '768px'}

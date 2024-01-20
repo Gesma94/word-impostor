@@ -17,3 +17,19 @@ button {
   @apply px-4 py-2 text-white rounded-lg font-semibold;
   margin: 1px solid 
 }
+
+h1, p {
+  @apply text-color;
+}
+
+a {
+  @apply text-blue font-semibold;
+}
+
+h1 {
+  @apply text-3xl text-center;
+}
+
+hr {
+  @apply border-0 h-[1px] m-2 bg-gradient-to-r from-transparent via-red to-transparent;
+}

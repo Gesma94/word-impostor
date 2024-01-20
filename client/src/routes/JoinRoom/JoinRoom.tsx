@@ -1,4 +1,4 @@
-import { A, useNavigate } from '@solidjs/router';
+import { useNavigate } from '@solidjs/router';
 import { JSX, createSignal } from 'solid-js';
 import { v4 as uuidv4 } from 'uuid';
 import { SEARCH_PARAM_KEY_USERNAME, SEARCH_PARAM_KEY_UUID } from '../../common/constants';

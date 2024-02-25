@@ -12,7 +12,7 @@ import { handleWsClose } from './ws/handleWsClose';
 import { handleWsOpen } from './ws/handleWsOpen';
 import { handleWsMessage } from './ws/handleWsMessage';
 
-const coras = cors({ origin: 'http://localhost:5173' });
+const coras = cors({ origin: ['http://localhost:5173', 'https://wordimpostor.gesma.dev'] });
 const app = express();
 const port = process.env.PORT || 7717;
 const wsServer = new Server({ noServer: true });

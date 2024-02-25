@@ -1,22 +1,29 @@
 import { words } from "./words";
 
-export default class Utils {    
-public static getImpostorIndex(max: number) {
-    return Math.floor(Math.random() * max);
-}
-
-public static getWords(areWordsRandom: boolean, secretWord: string, impostorWord: string): { secretWord: string; impostorWord: string; } {
-    if (!areWordsRandom) {
-        return { secretWord, impostorWord };
+export default class Utils {
+    public static isNotNullOrUndefined<T>(value: T): value is NonNullable<T> {
+        return value !== undefined && value !== null;
     }
 
-    const randomWordsIndex = Math.floor(Math.random() * words.length);
-    const randomSecretWordIndex = Math.floor(Math.random() * 2);
-
-    return {
-        secretWord: words[randomWordsIndex][randomSecretWordIndex],
-        impostorWord: words[randomWordsIndex][randomSecretWordIndex === 0 ? 1 : 0],
+    public static isNullOrUndefined(value: unknown): value is null | undefined {
+        return value === undefined || value === null;
     }
-}
+    public static getImpostorIndex(max: number) {
+        return Math.floor(Math.random() * max);
+    }
+
+    public static getWords(areWordsRandom: boolean, secretWord: string, impostorWord: string): { secretWord: string; impostorWord: string; } {
+        if (!areWordsRandom) {
+            return { secretWord, impostorWord };
+        }
+
+        const randomWordsIndex = Math.floor(Math.random() * words.length);
+        const randomSecretWordIndex = Math.floor(Math.random() * 2);
+
+        return {
+            secretWord: words[randomWordsIndex][randomSecretWordIndex],
+            impostorWord: words[randomWordsIndex][randomSecretWordIndex === 0 ? 1 : 0],
+        }
+    }
 
 }

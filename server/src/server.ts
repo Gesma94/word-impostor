@@ -5,13 +5,17 @@ import { Database, OPEN_CREATE, OPEN_READWRITE, RunResult, Statement } from 'sql
 import { Server } from 'ws';
 import type { RawData } from 'ws';
 import { SqliteTableCounter, TRoomStore } from './schemas';
-import { handleWsClose, handleWsMessage } from './websocket';
+import { roomStore } from './storage/roomStore';
+import roomRouter from './routes/room';
+import cors from 'cors';
+import { handleWsClose } from './ws/handleWsClose';
+import { handleWsOpen } from './ws/handleWsOpen';
+import { handleWsMessage } from './ws/handleWsMessage';
 
+const coras = cors({ origin: 'http://localhost:5173' });
 const app = express();
 const port = process.env.PORT || 7717;
 const wsServer = new Server({ noServer: true });
-
-const rooms: TRoomStore = {};
 
 const server = app.listen(port, async () => {
     await createTablesAsync();
@@ -24,12 +28,20 @@ server.on('upgrade', (request, socket, head) => {
     });
 })
 
+wsServer.on('close', (a: any) => {
+    var asd = a;
+});
+
 wsServer.on('connection', socket => {
     const connectionUuid = randomUUID();
 
-    socket.on('close', (_: RawData, __: boolean) =>  handleWsClose(rooms, connectionUuid));
-    socket.on('message', (rawData: RawData, _: boolean) =>  handleWsMessage(rooms, socket, connectionUuid, rawData));
+    socket.on('open', (_: RawData, __: boolean) => handleWsOpen(connectionUuid));
+    socket.on('close', (_: RawData, __: boolean) => handleWsClose(connectionUuid));
+    socket.on('message', (rawData: RawData, _: boolean) => handleWsMessage(socket, rawData, connectionUuid));
 });
+
+app.use(coras);
+app.use("/room", roomRouter);
 
 app.get("/", (req: Request, res: Response) => {
     res.send("Express + TypeScript Server");
@@ -44,7 +56,7 @@ app.post('/room/create/:roomId', async (req: Request, res: Response) => {
         res.sendStatus(500);
     }
 
-    if (Object.keys(rooms).includes(roomId)) {
+    if (Object.keys(roomStore).includes(roomId)) {
         res.sendStatus(500);
     }
 

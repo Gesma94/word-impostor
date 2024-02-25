@@ -1,49 +1,73 @@
 import { useNavigate } from '@solidjs/router';
-import { JSX, createSignal } from 'solid-js';
-import { v4 as uuidv4 } from 'uuid';
-import { SEARCH_PARAM_KEY_USERNAME, SEARCH_PARAM_KEY_UUID } from '../../common/constants';
+import { JSX, Show, createSignal } from 'solid-js';
 import { VsLink } from 'solid-icons/vs';
 import { IconUrl } from '../../components/IconUrl/IconUrl';
+import { LoadScreen } from '../../components/LoadScreen/LoadScreen';
+import { TextError } from '../../components/TextError/TextError';
+import Utils from '../../common/Utils';
+import { createBusyContent } from '../../signals/useBusyContent';
 
 export const JoinRoom = () => {
-    const uuid = uuidv4();
     const navigate = useNavigate();
 
+    const [error, setError] = createSignal<string>('');
     const [roomId, setRoomId] = createSignal<string>('');
-    const [username, setUsername] = createSignal<string>('');
+    const [isBusy, busyContent, setBusy, setNotBusy] = createBusyContent(false, '');
 
     const handleSecretWordChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
         setRoomId(e.currentTarget.value);
     }
 
-    const handleUsernameChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
-        setUsername(e.currentTarget.value);
-    }
+    const handleJoinRoomFormSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> = async (e) => {
+        e.preventDefault();
 
-    const handleJoinRoomClick: JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (_) => {
-        const searchParams = new URLSearchParams();
+        const apiUrl = import.meta.env.VITE_SERVER_BASE_URL;
 
-        searchParams.append(SEARCH_PARAM_KEY_UUID, uuid);
-        searchParams.append(SEARCH_PARAM_KEY_USERNAME, username());
+        setError('');
+        setBusy(`Connecting to room '${roomId()}'`);
 
-        navigate(`/room/${roomId()}?${searchParams.toString()}`);
+        try {
+            const apiResponse = await fetch(`${apiUrl}/room/${roomId()}/exists`);
+            await Utils.delay(1000);
+
+            if (apiResponse.ok) {
+                navigate(`/room/${roomId()}`);
+            }
+            else {
+                setError(`Cannot connect to room '${roomId()}'`);
+            }
+        }
+        catch (e) {
+            setError(`Error while communicating with the server`);
+        }
+        finally {
+            setNotBusy();
+        }
     }
 
     return (
-        <div class='h-full grid place-content-center'>
-            <div class='w-[320px]'>
-                <h1>Join room</h1>
-                <hr />
-                <div class='grid grid-rows-[auto_auto_auto] grid-cols-[auto_1fr] gap-4 py-4'>
-                <label for='roomId'>Room ID:</label>
-                <input id='roomId' value={roomId()} onInput={handleSecretWordChange} />
-                <label for='secretWord'>Username:</label>
-                <input id='secretWord' value={username()} onInput={handleUsernameChange} />
-                <button class='col-span-2 ' onclick={handleJoinRoomClick}>Join Room</button>
+        <>
+            <LoadScreen isVisible={isBusy()} message={busyContent()} />
+            <div class='h-full grid place-content-center'>
+                <div class='w-[320px] min-h-0'>
+                    <div class='py-4'>
+                        <h1>Join room</h1>
+                        <hr />
+                        <form class='grid grid-rows-[auto_auto_auto] grid-cols-[auto_1fr] gap-4 pt-4' onSubmit={handleJoinRoomFormSubmit}>
+                            <label for='roomId'>Room ID:</label>
+                            <input id='roomId' value={roomId()} onInput={handleSecretWordChange} />
+                            <button class='col-span-2' type='submit'>Join Room</button>
+                        </form>
+                        <Show when={error() !== ''}>
+                            <div class='py-1'>
+                                <TextError text={error()} />
+                            </div>
+                        </Show>
+                        <hr />
+                        <p>Or, <IconUrl text='create a room' icon={VsLink} url='/create-room' /></p>
+                    </div>
                 </div>
-                <hr />
-                <p>Or, <IconUrl text='create a room' icon={VsLink} url='/create-room' /></p>
             </div>
-        </div>
+        </>
     )
 }

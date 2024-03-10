@@ -1,8 +1,8 @@
 import { JSX } from 'solid-js';
 import { useNavigate, useParams } from '@solidjs/router';
-import { ERROR_ID_CANNOT_CREATE_ROOM } from '../../common/constants';
+import { ERROR_ID } from '../../common/constants';
 
-type TErrorId = typeof ERROR_ID_CANNOT_CREATE_ROOM | 'other';
+type TErrorId = typeof ERROR_ID.CANNOT_CREATE_ROOM | 'other';
 
 type TErrorParams = {
     errorId: TErrorId;

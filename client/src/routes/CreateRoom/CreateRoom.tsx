@@ -1,31 +1,27 @@
 import { onMount } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
-import Utils from '../../common/Utils';
 import { LoadScreen } from '../../components/LoadScreen/LoadScreen';
-import { ERROR_ID_CANNOT_CREATE_ROOM } from '../../common/constants';
+import { ROUTES, ERROR_ID } from '../../common/constants';
+import { API_ROUTES } from '../../common/apiUrl';
 
 export const CreateRoom = () => {
     const navigate = useNavigate();
 
     onMount(async () => {
-        const apiUrl = import.meta.env.VITE_SERVER_BASE_URL;
 
         try {
-            const searchParams = new URLSearchParams();
-            searchParams.append("masterUuid", Utils.getUserUuid());
-
-            const apiResponse = await fetch(`${apiUrl}/room/create?${searchParams.toString()}`);
+            const apiResponse = await fetch(API_ROUTES.CREATE_ROOM);
 
             if (!apiResponse.ok) {
-                navigate(`/error/${ERROR_ID_CANNOT_CREATE_ROOM}`);
+                navigate(ROUTES.ERROR(ERROR_ID.CANNOT_CREATE_ROOM));
                 return;
             }
             
             const newRoomUuid = await apiResponse.text();
-            navigate(`/room/${newRoomUuid}/master`, { replace: true });
+            navigate(ROUTES.ROOM_MASTER(newRoomUuid), { replace: true });
         }
         catch(e) {
-            navigate('/error');
+            navigate(ROUTES.ERROR());
         }
     });
 

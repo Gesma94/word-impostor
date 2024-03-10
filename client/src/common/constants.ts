@@ -1,3 +1,5 @@
+export const API_URL = import.meta.env.VITE_SERVER_BASE_URL;
+
 export const WS_MESSAGE_EVENT_CREATE_ROOM = 'create-room';
 export const WS_MESSAGE_EVENT_PLAYER_JOIN = 'player-joined';
 export const WS_MESSAGE_EVENT_PLAYER_LEFT = 'player-left';
@@ -26,5 +28,17 @@ export const WS_MSG_EVT_MASTER_JOIN_ROOM_RESPONSE = 'WS_MSG_EVT_MASTER_JOIN_ROOM
 export const LOCAL_STORAGE_USER_UUID_KEY = '__word_impostor_user_uuid__';
 export const LOCAL_STORAGE_USER_USERNAME_KEY = '__word_impostor_user_username__';
 
-export const ERROR_ID_CANNOT_CREATE_ROOM = 'cannot-create-room';
+export const ERROR_ID = {
+    CANNOT_CREATE_ROOM: 'cannot-create-room',
+} as const;
 
+
+export const ROUTES = {
+    ROOM: "/room",
+    ERROR: function(errorId?: string) {
+        return errorId === undefined || errorId === null ? '/error' : `/error/${errorId}`
+    },
+    ROOM_MASTER: function(roomId: string) {
+        return `/${this.ROOM}/${roomId}/master`
+    }
+} as const;

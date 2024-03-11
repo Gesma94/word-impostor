@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "dev-open": "vite --host --open",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build-common": "tsc --project ./../shared/tsconfig.json",
+    "dev": "npm run build-common && vite",
+    "dev-open": "npm run build-common && vite --host --open",
+    "build": "npm run build-common && tsc && vite build",
+    "preview": "npm run build-common && vite preview"
   },
   "dependencies": {
     "@solidjs/router": "^0.10.6",

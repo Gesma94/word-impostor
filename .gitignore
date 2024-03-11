@@ -1,15 +1,17 @@
 # Root
 .vscode
 
+# Shared
+/shared/node_modules
+/shared/dist
+/shared/tsconfig.tsbuildinfo
+
 # Client App
 /client/.vscode
 /client/dist
 /client/node_modules
 /client/.env.development
 /client/.env.production
-
-# Common
-/common/node_modules
 
 # Server App
 /server/dist

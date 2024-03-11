@@ -31,10 +31,10 @@ jobs:
         VITE_SERVER_BASE_URL: ${{ secrets.VITE_SERVER_BASE_URL }}
         VITE_SERVER_BASE_WS_URL: ${{ secrets.VITE_SERVER_BASE_WS_URL }}
   
-    - name: Deploy To Netlify
-      uses: South-Paw/action-netlify-deploy@v1.2.0
+    - name: Deploy To Cloudflare Pages
+      uses: cloudflare/pages-action@v1
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
-        build-dir: './client/dist'
+        apiToken: ${{ secret.CLOUDFLARE_API_TOKEN }}
+        accountId: 'ab30a017b87c1dcc6b925915c129206a'
+        projectName: 'word-impostor'
+        directory: './client/dist'

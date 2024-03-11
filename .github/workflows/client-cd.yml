@@ -34,7 +34,7 @@ jobs:
     - name: Deploy To Cloudflare Pages
       uses: cloudflare/pages-action@v1
       with:
-        apiToken: ${{ secret.CLOUDFLARE_API_TOKEN }}
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: 'ab30a017b87c1dcc6b925915c129206a'
         projectName: 'word-impostor'
         directory: './client/dist'

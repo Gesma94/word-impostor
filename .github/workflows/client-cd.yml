@@ -6,7 +6,7 @@ on:
     paths: [ "client/**", "common/**", ".github/workflows/client-cd.yml" ]
 
 jobs:      
-  DeployOnNetlify:
+  DeployOnCloudflare:
     runs-on: ubuntu-latest
 
     defaults:

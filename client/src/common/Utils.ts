@@ -1,31 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { LOCAL_STORAGE_USER_USERNAME_KEY, LOCAL_STORAGE_USER_UUID_KEY } from './constants';
 import { redirect } from '@solidjs/router';
-import { TPlayer } from './types';
+import { SharedUtils } from '@shared/utils/SharedUtils';
+import { TPlayer } from '@shared/types/SharedTypes';
 
 export default class Utils {
-    public static isNotNullOrUndefined<T>(value: T): value is NonNullable<T> {
-        return value !== undefined && value !== null;
-    }
-
-    public static isNullOrUndefined(value: unknown): value is null | undefined {
-        return value === undefined || value === null;
-    }
-
-    public static generateRoomId(): string {
-        let roomId = '';
-
-        for (let i = 0; i < 2; i++) {
-            roomId += String.fromCharCode(65 + (Math.floor(Math.random() * 26)));
-        }
-
-        for (let i = 0; i < 4; i++) {
-            roomId += Math.floor(Math.random() * 10)
-        }
-
-        return roomId;
-    }
-
     public static getUsername(): string | null {
         return localStorage.getItem(LOCAL_STORAGE_USER_USERNAME_KEY) ?? null;
     }
@@ -37,7 +16,7 @@ export default class Utils {
     public static getUsernameOrRedirect(): string {
         const cachedUsername = this.getUsername();
 
-        if (this.isNullOrUndefined(cachedUsername)) {
+        if (SharedUtils.isNullOrUndefined(cachedUsername)) {
             redirect("");
             return "";
         }
@@ -48,7 +27,7 @@ export default class Utils {
     public static getUserUuid(): string {
         const cachedUuid = localStorage.getItem(LOCAL_STORAGE_USER_UUID_KEY);
 
-        if (this.isNotNullOrUndefined(cachedUuid)) {
+        if (SharedUtils.isNotNullOrUndefined(cachedUuid)) {
             return cachedUuid;
         }
 
@@ -59,7 +38,7 @@ export default class Utils {
     }
 
     public static getOrderedPlayers(players: TPlayer[], playerGuid: string) {
-        const indexSelfGuid = players.findIndex(x => x.guid === playerGuid);
+        const indexSelfGuid = players.findIndex(x => x.uuid === playerGuid);
 
         if (indexSelfGuid === -1) {
             return players;

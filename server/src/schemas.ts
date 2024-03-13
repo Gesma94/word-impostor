@@ -1,5 +1,5 @@
 import type { WebSocket } from 'ws';
-import { WS_MESSAGE_EVENT_CREATE_ROOM, WS_MSG_EVT_PLAYER_JOIN_ROOM as WS_MSG_EVT_PLAYER_JOIN_ROOM, WS_MESSAGE_EVENT_PLAYER_JOIN, WS_MESSAGE_EVENT_PLAYER_LEFT, WS_MESSAGE_EVENT_ROOM_STARTED, WS_MESSAGE_EVENT_START_ROOM, WS_MSG_EVT_MASTER_JOINED_ROOM, WS_MSG_EVT_MASTER_JOIN_ROOM, WS_MSG_EVT_MASTER_LEFT_ROOM, WS_MSG_EVT_PLAYER_LEFT_ROOM, WS_MSG_EVT_PLAYER_JOINED_ROOM, WS_MSG_EVT_PLAYER_JOIN_ROOM_RESPONSE, WS_MSG_EVT_GAME_STARTED, WS_MSG_EVT_MASTER_IS_PLAYING, WS_MSG_EVT_START_ROUND, WS_MSG_EVT_ROUND_STARTED, WS_MSG_EVT_MASTER_JOIN_ROOM_RESPONSE as WS_MSG_EVT_MASTER_JOIN_ROOM_RESPONSE } from './constants';
+import { WS_MESSAGE_EVENT_CREATE_ROOM, WS_MSG_EVT_PLAYER_JOIN_ROOM as WS_MSG_EVT_PLAYER_JOIN_ROOM, WS_MESSAGE_EVENT_PLAYER_JOIN, WS_MESSAGE_EVENT_ROOM_STARTED, WS_MESSAGE_EVENT_START_ROOM, WS_MSG_EVT_MASTER_JOINED_ROOM, WS_MSG_EVT_MASTER_JOIN_ROOM, WS_MSG_EVT_MASTER_LEFT_ROOM, WS_MSG_EVT_PLAYER_LEFT_ROOM, WS_MSG_EVT_PLAYER_JOINED_ROOM, WS_MSG_EVT_PLAYER_JOIN_ROOM_RESPONSE, WS_MSG_EVT_GAME_STARTED, WS_MSG_EVT_MASTER_IS_PLAYING, WS_MSG_EVT_START_ROUND, WS_MSG_EVT_ROUND_STARTED, WS_MSG_EVT_MASTER_JOIN_ROOM_RESPONSE as WS_MSG_EVT_MASTER_JOIN_ROOM_RESPONSE } from './constants';
 
 export type TWsConnection = {
     socket: WebSocket;
@@ -79,7 +79,7 @@ export type WsMasterJoinRoomResponsePayload = {
 }
 
 export type TPlayer = {
-    guid: string;
+    uuid: string;
     username: string;
 }
 export type WsPlayerLeftRoomPayload = {
@@ -104,11 +104,9 @@ export type WsRoundStartedPayload = {
 
 
 export type IWsStartRoomMessage = WsMessageBase<typeof WS_MESSAGE_EVENT_START_ROOM, WsStartRoomPayload>;
-export type IWsPlayerLeftMessage = WsMessageBase<typeof WS_MESSAGE_EVENT_PLAYER_LEFT, WsPlayerLeftPayload>;
 export type IWsCreateRoomMessage = WsMessageBase<typeof WS_MESSAGE_EVENT_CREATE_ROOM, WsCreateRoomPayload>;
 export type IWsPlayerJoinedMessage = WsMessageBase<typeof WS_MESSAGE_EVENT_PLAYER_JOIN, WsPlayerJoinedPayload>;
 
-export type IwsGameStartedMessage = WsMessageBase<typeof WS_MSG_EVT_GAME_STARTED, WsGameStartedPayload>;
 export type IWsPlayerJoinRoomMessage = WsMessageBase<typeof WS_MSG_EVT_PLAYER_JOIN_ROOM, WsPlayerJoinRoomPayload>;
 export type IWsPlayerJoinedRoomMessage = WsMessageBase<typeof WS_MSG_EVT_PLAYER_JOINED_ROOM, WsPlayerJoinedRoomPayload>;
 export type IWsPlayerJoinRoomResponseMessage = WsMessageBase<typeof WS_MSG_EVT_PLAYER_JOIN_ROOM_RESPONSE, WsPlayerJoinRoomResponsePayload>;
@@ -121,7 +119,7 @@ export type IWsMasterIsPlayingMessage = WsMessageBase<typeof WS_MSG_EVT_MASTER_I
 export type IWsStartRoundMessage = WsMessageBase<typeof WS_MSG_EVT_START_ROUND, WsStartRoundPayload>;
 export type IWsRoundStartedMessage = WsMessageBase<typeof WS_MSG_EVT_ROUND_STARTED, WsRoundStartedPayload>;
 
-export type IWebSocketMessage = IWsPlayerJoinRoomMessage | IWsStartRoomMessage | IWsPlayerLeftMessage | IWsCreateRoomMessage | IwsGameStartedMessage  | IWsPlayerJoinedMessage | IWsMasterJoinRoomMessage | IWsMasterJoinedRoomMessage
+export type IWebSocketMessage = IWsPlayerJoinRoomMessage | IWsStartRoomMessage | IWsCreateRoomMessage  | IWsPlayerJoinedMessage | IWsMasterJoinRoomMessage | IWsMasterJoinedRoomMessage
 | IWsMasterLeftRoomMessage | IWsPlayerLeftRoomMessage | IWsPlayerJoinedRoomMessage | IWsPlayerJoinRoomResponseMessage | IWsMasterIsPlayingMessage | IWsStartRoundMessage | IWsRoundStartedMessage | IWsMasterJoinRoomResponseMessage;
 
 export type SqliteTableCounter = {

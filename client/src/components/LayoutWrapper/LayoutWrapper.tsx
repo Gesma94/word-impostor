@@ -1,8 +1,8 @@
 import { ParentProps, onMount } from "solid-js";
 import { Topbar } from "../Topbar/Topbar";
 import { useNavigate } from "@solidjs/router";
-import SharedUtils from "@shared/utils/Utils";
 import Utils from "src/common/Utils";
+import { SharedUtils } from "@shared/utils/SharedUtils";
 
 export const LayoutWrapper = (props: ParentProps) => {
     const navigate = useNavigate(); 

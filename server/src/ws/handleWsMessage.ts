@@ -68,7 +68,7 @@ function handleMasterJoinRoom(socket: WebSocket, payload: WsMasterJoinRoomPayloa
         payload: {
             currentRound: room.currentRound,
             hasStarted: room.hasStarted,
-            players: Object.values(room.players).map(x => ({ guid: x.uuid, username: x.username })),
+            players: Object.values(room.players).map(x => ({ uuid: x.uuid, username: x.username })),
             playerWord: playerWord ?? null
         }
     }

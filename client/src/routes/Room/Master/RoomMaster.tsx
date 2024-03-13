@@ -1,8 +1,6 @@
 import type { JSX } from 'solid-js'
 import { For, Match, Show, Switch, createEffect, createRenderEffect, createSignal, onCleanup, onMount } from 'solid-js';
 import { redirect, useNavigate, useParams } from '@solidjs/router';
-import { IWebSocketMessage, IWsMasterJoinRoomMessage, WsPlayerJoinedRoomPayload, WsPlayerLeftRoomPayload, IWsMasterIsPlayingMessage, IWsStartRoundMessage, WsRoundStartedPayload, WsMasterJoinRoomResponsePayload } from '../../../common/schemas';
-import { TPlayer } from '../../../common/types';
 import { createBusyContent } from '../../../signals/useBusyContent';
 import { LoadScreen } from '../../../components/LoadScreen/LoadScreen';
 import Utils from '../../../common/Utils';
@@ -10,7 +8,10 @@ import { Toggle } from '../../../components/Toggle/Toggle';
 import { IconUrl } from '../../../components/IconUrl/IconUrl';
 import { VsLink } from 'solid-icons/vs';
 import { RiUserFacesUser3Line } from 'solid-icons/ri';
-import { WS_MSG_EVT_MASTER_IS_PLAYING, WS_MSG_EVT_MASTER_JOIN_ROOM_RESPONSE, WS_MSG_EVT_PLAYER_JOINED_ROOM, WS_MSG_EVT_PLAYER_LEFT_ROOM, WS_MSG_EVT_ROUND_STARTED, WS_MSG_EVT_START_ROUND } from '../../../common/constants';
+import { SharedUtils } from '@shared/utils/SharedUtils';
+import { TPlayer } from '@shared/types/SharedTypes';
+import { TWebSocketMessage, TWsMasterIsPlayingMessage, TWsMasterJoinRoomMessage, TWsMasterJoinRoomResponsePayload, TWsPlayerJoinedRoomPayload, TWsPlayerLeftRoomPayload, TWsRoundStartedPayload, TWsStartRoundMessage } from '@shared/types/WebSocket';
+import { WS_MSG_EVENTS } from '@shared/constants/WebSocket';
 
 type TRoomMasterParams = {
     roomId: string;
@@ -70,8 +71,8 @@ export const RoomMaster = () => {
     }
 
     const startRound = () => {
-        const WsStartRoundMessage: IWsStartRoundMessage = {
-            event: WS_MSG_EVT_START_ROUND,
+        const WsStartRoundMessage: TWsStartRoundMessage = {
+            event: WS_MSG_EVENTS.START_ROUND,
             payload: {
                 roomId: roomId,
                 secretWord: secretWord(),
@@ -90,19 +91,19 @@ export const RoomMaster = () => {
         setIsShowingPlayers(true);
     }
 
-    const handleWsPlayerJoin = (payload: WsPlayerJoinedRoomPayload) => {
+    const handleWsPlayerJoin = (payload: TWsPlayerJoinedRoomPayload) => {
         setPlayers(prev => {
-            if (prev.findIndex(x => x.guid === payload.playerUuid) === -1) {
-                return [...prev, { guid: payload.playerUuid, username: payload.username }];
+            if (prev.findIndex(x => x.uuid === payload.playerUuid) === -1) {
+                return [...prev, { uuid: payload.playerUuid, username: payload.username }];
             }
 
             return prev;
         });
     }
 
-    const handleWsPlayerLeft = (payload: WsPlayerLeftRoomPayload) => {
+    const handleWsPlayerLeft = (payload: TWsPlayerLeftRoomPayload) => {
         setPlayers(curr => {
-            const indexToRemove = curr.findIndex(x => x.guid === payload.playerUuid);
+            const indexToRemove = curr.findIndex(x => x.uuid === payload.playerUuid);
             return (indexToRemove !== -1)
                 ? Utils.GetWithoutElementAt(curr, indexToRemove)
                 : curr;
@@ -112,8 +113,8 @@ export const RoomMaster = () => {
     const handleWsOpen = (_: Event) => {
         setIsWsOpen(true);
 
-        const wsCreateRoomMessage: IWsMasterJoinRoomMessage = {
-            event: 'WS_MSG_EVT_MASTER_JOIN_ROOM',
+        const wsCreateRoomMessage: TWsMasterJoinRoomMessage = {
+            event: WS_MSG_EVENTS.MASTER_JOIN_ROOM,
             payload: {
                 roomId: roomId,
                 masterUuid: Utils.getUserUuid()
@@ -132,13 +133,13 @@ export const RoomMaster = () => {
     }
 
     
-    const handleWsRoundStarted = (payload: WsRoundStartedPayload) => {
+    const handleWsRoundStarted = (payload: TWsRoundStartedPayload) => {
         setCurrentRound(payload.round);
         setWordToPlayWith(payload.knownWord);
         setImpostHasHintInRound(payload.impostorHint);
     }
     
-    const handleWsMasterJoinRoomResponse = (payload: WsMasterJoinRoomResponsePayload) => {
+    const handleWsMasterJoinRoomResponse = (payload: TWsMasterJoinRoomResponsePayload) => {
         setCurrentRound(payload.currentRound);
         setIsPlayingStage(payload.hasStarted);
         setWordToPlayWith(payload.playerWord);
@@ -147,18 +148,18 @@ export const RoomMaster = () => {
     }
 
     const handleWsMessage = (e: MessageEvent) => {
-        const message: IWebSocketMessage = JSON.parse(e.data);
+        const message: TWebSocketMessage = JSON.parse(e.data);
 
-        if (message.event === WS_MSG_EVT_PLAYER_JOINED_ROOM) {
+        if (message.event === WS_MSG_EVENTS.PLAYER_JOINED_ROOM) {
             handleWsPlayerJoin(message.payload);
         }
-        if (message.event === WS_MSG_EVT_PLAYER_LEFT_ROOM) {
+        if (message.event === WS_MSG_EVENTS.PLAYER_LEFT_ROOM) {
             handleWsPlayerLeft(message.payload);
         }
-        if (message.event === WS_MSG_EVT_ROUND_STARTED) {
+        if (message.event === WS_MSG_EVENTS.ROUND_STARTED) {
             handleWsRoundStarted(message.payload);    
         }
-        if (message.event === WS_MSG_EVT_MASTER_JOIN_ROOM_RESPONSE) {
+        if (message.event === WS_MSG_EVENTS.MASTER_JOIN_ROOM_RESPONSE) {
             handleWsMasterJoinRoomResponse(message.payload)
         }
     }
@@ -172,13 +173,13 @@ export const RoomMaster = () => {
     createEffect(() => {
         const isPlaying = isMasterPlaying();
 
-        if (Utils.isNullOrUndefined(webSocket)) {
+        if (SharedUtils.isNullOrUndefined(webSocket)) {
             redirect('/error');
             return;
         }
 
-        const WsMasterIsPlayingMessage: IWsMasterIsPlayingMessage = {
-            event: WS_MSG_EVT_MASTER_IS_PLAYING,
+        const WsMasterIsPlayingMessage: TWsMasterIsPlayingMessage = {
+            event: WS_MSG_EVENTS.MASTER_IS_PLAYING,
             payload: {
                 roomId: roomId,
                 isPlaying: isPlaying,
@@ -223,7 +224,7 @@ export const RoomMaster = () => {
     });
 
     onCleanup(() => {
-        if (Utils.isNullOrUndefined(webSocket)) {
+        if (SharedUtils.isNullOrUndefined(webSocket)) {
             return;
         }
 
@@ -278,8 +279,8 @@ export const RoomMaster = () => {
                                             {player => (
                                                 <li class='flex items-center min-w-0 mt-2'>
                                                     <RiUserFacesUser3Line />
-                                                    <Show when={player.guid === Utils.getUserUuid()}><span class='pl-2 italic'>(You)</span></Show>
-                                                    <Show when={player.guid !== Utils.getUserUuid()}><span class='pl-2 truncate'>{player.username}</span></Show>
+                                                    <Show when={player.uuid === Utils.getUserUuid()}><span class='pl-2 italic'>(You)</span></Show>
+                                                    <Show when={player.uuid !== Utils.getUserUuid()}><span class='pl-2 truncate'>{player.username}</span></Show>
                                                 </li>
                                             )}
                                         </For>

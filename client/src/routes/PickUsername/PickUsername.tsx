@@ -2,6 +2,7 @@ import { useNavigate } from "@solidjs/router";
 import Utils from "../../common/Utils";
 import { JSX, Show, createSignal } from "solid-js";
 import { Topbar } from "../../components/Topbar/Topbar";
+import { SharedUtils } from "@shared/utils/SharedUtils";
 
 export const PickUsername = () => {
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ export const PickUsername = () => {
 
     return (
         <>
-            <Show when={Utils.isNullOrUndefined(cachedUsername)}>
+            <Show when={SharedUtils.isNullOrUndefined(cachedUsername)}>
                 <div class='h-full grid place-content-center'>
                     <div class='w-[320px]'>
                         <h1>Pick Username</h1>
@@ -45,7 +46,7 @@ export const PickUsername = () => {
                     </div>
                 </div>
             </Show>
-            <Show when={Utils.isNotNullOrUndefined(cachedUsername)}>
+            <Show when={SharedUtils.isNotNullOrUndefined(cachedUsername)}>
                 <div class="h-full grid grid-rows-[auto_1fr]">
                     <div><Topbar /></div>
                     <div>

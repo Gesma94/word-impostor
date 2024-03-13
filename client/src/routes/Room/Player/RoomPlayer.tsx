@@ -1,8 +1,5 @@
 import { A, useNavigate, useParams } from '@solidjs/router';
 import { JSX, Show, createSignal, onCleanup, onMount } from 'solid-js';
-import { IWebSocketMessage, IWsPlayerJoinRoomMessage, WsPlayerJoinRoomResponsePayload, WsPlayerJoinedRoomPayload, WsPlayerLeftRoomPayload, WsRoundStartedPayload } from '../../../common/schemas';
-import { WS_MSG_EVT_MASTER_JOINED_ROOM, WS_MSG_EVT_MASTER_LEFT_ROOM, WS_MSG_EVT_PLAYER_JOINED_ROOM, WS_MSG_EVT_PLAYER_JOIN_ROOM, WS_MSG_EVT_PLAYER_JOIN_ROOM_RESPONSE, WS_MSG_EVT_PLAYER_LEFT_ROOM, WS_MSG_EVT_ROUND_STARTED } from '../../../common/constants';
-import { TPlayer } from '../../../common/types';
 import Utils from '../../../common/Utils';
 import { LoadScreen } from '../../../components/LoadScreen/LoadScreen';
 import { IconUrl } from '../../../components/IconUrl/IconUrl';
@@ -10,6 +7,10 @@ import { VsLink } from 'solid-icons/vs';
 import { PlayersList } from '../../../components/PlayersList/PlayersList';
 import { createBusyContent } from '../../../signals/useBusyContent';
 import { SecretWord } from '../../../components/SecretWord/SecretWord';
+import { SharedUtils } from '@shared/utils/SharedUtils';
+import { TPlayer } from '@shared/types/SharedTypes';
+import { TWebSocketMessage, TWsPlayerJoinRoomMessage, TWsPlayerJoinRoomResponsePayload, TWsPlayerJoinedRoomPayload, TWsPlayerLeftRoomPayload, TWsRoundStartedPayload } from '@shared/types/WebSocket';
+import { WS_MSG_EVENTS } from '@shared/constants/WebSocket';
 
 type TRoomPlayerParams = {
     roomId: string;
@@ -43,12 +44,12 @@ export const RoomPlayer = () => {
     }
 
     const handleWsOpen = (_: Event) => {
-        if (Utils.isNullOrUndefined(params.roomId)) {
+        if (SharedUtils.isNullOrUndefined(params.roomId)) {
             navigate('/error');
         }
 
-        const wsEventCreateRoom: IWsPlayerJoinRoomMessage = {
-            event: WS_MSG_EVT_PLAYER_JOIN_ROOM,
+        const wsEventCreateRoom: TWsPlayerJoinRoomMessage = {
+            event: WS_MSG_EVENTS.PLAYER_JOIN_ROOM,
             payload: {
                 roomId: params.roomId,
                 playerUuid: Utils.getUserUuid(),
@@ -60,32 +61,32 @@ export const RoomPlayer = () => {
     }
 
     const handleWsMessage = (e: MessageEvent) => {
-        const message: IWebSocketMessage = JSON.parse(e.data);
+        const message: TWebSocketMessage = JSON.parse(e.data);
 
         switch (message.event) {
-            case WS_MSG_EVT_PLAYER_JOIN_ROOM_RESPONSE:
+            case WS_MSG_EVENTS.PLAYER_JOIN_ROOM_RESPONSE:
                 handleWsPlayerJoinResponse(message.payload);
                 break;
-            case WS_MSG_EVT_PLAYER_JOINED_ROOM:
+            case WS_MSG_EVENTS.PLAYER_JOINED_ROOM:
                 handleWsPlayerJoinedRoom(message.payload);
                 break;
-            case WS_MSG_EVT_PLAYER_LEFT_ROOM:
+            case WS_MSG_EVENTS.PLAYER_LEFT_ROOM:
                 handleWsPlayerLeft(message.payload);
                 break;
-            case WS_MSG_EVT_MASTER_LEFT_ROOM:
+            case WS_MSG_EVENTS.MASTER_LEFT_ROOM:
                 handleWsMasterLeft(message.payload);
                 break;
-            case WS_MSG_EVT_MASTER_JOINED_ROOM:
+            case WS_MSG_EVENTS.MASTER_JOINED_ROOM:
                 handleWsMasterJoined(message.payload);
                 break;
-            case WS_MSG_EVT_ROUND_STARTED:
+            case WS_MSG_EVENTS.ROUND_STARTED:
                 handleWsRoundStarted(message.payload);            
                 break;
         }
     }
 
-    const handleWsPlayerJoinResponse = (payload: WsPlayerJoinRoomResponsePayload) => {
-        const newPlayers: TPlayer[] = payload.players.map(x => ({ guid: x.playerUuid, username: x.username }));
+    const handleWsPlayerJoinResponse = (payload: TWsPlayerJoinRoomResponsePayload) => {
+        const newPlayers: TPlayer[] = payload.players.map(x => ({ uuid: x.playerUuid, username: x.username }));
         setPlayers(newPlayers);
 
         if (!payload.hasStarted) {
@@ -100,13 +101,13 @@ export const RoomPlayer = () => {
         }
     }
 
-    const handleWsPlayerJoinedRoom = (payload: WsPlayerJoinedRoomPayload) => {
-        setPlayers(curr => [...curr, { guid: payload.playerUuid, username: payload.username }]);
+    const handleWsPlayerJoinedRoom = (payload: TWsPlayerJoinedRoomPayload) => {
+        setPlayers(curr => [...curr, { uuid: payload.playerUuid, username: payload.username }]);
     }
 
-    const handleWsPlayerLeft = (payload: WsPlayerLeftRoomPayload) => {
+    const handleWsPlayerLeft = (payload: TWsPlayerLeftRoomPayload) => {
         setPlayers(curr => {
-            const indexToRemove = curr.findIndex(x => x.guid === payload.playerUuid);
+            const indexToRemove = curr.findIndex(x => x.uuid === payload.playerUuid);
             return (indexToRemove !== -1)
                 ? Utils.GetWithoutElementAt(curr, indexToRemove)
                 : curr;
@@ -121,7 +122,7 @@ export const RoomPlayer = () => {
         setNotBusy();
     }
     
-    const handleWsRoundStarted = (payload: WsRoundStartedPayload) => {
+    const handleWsRoundStarted = (payload: TWsRoundStartedPayload) => {
         setCurrentRound(payload.round);
         setKnownWord(payload.knownWord);
         setImpostorHasHint(payload.impostorHint);
@@ -140,7 +141,7 @@ export const RoomPlayer = () => {
     });
 
     onCleanup(() => {
-        if (Utils.isNullOrUndefined(webSocket)) {
+        if (SharedUtils.isNullOrUndefined(webSocket)) {
             return;
         }
 
@@ -173,7 +174,7 @@ export const RoomPlayer = () => {
                         <hr />
                         <Show when={isShowingRoom()}>
                             <div class='h-[200px] overflow-y-auto'>
-                                <Show when={Utils.isNotNullOrUndefined(knownWord())}>
+                                <Show when={SharedUtils.isNotNullOrUndefined(knownWord())}>
                                     <p class='text-center'>
                                         You have your secret word!
                                         <br />
@@ -187,7 +188,7 @@ export const RoomPlayer = () => {
                                         <p class='text-center'><b>Beaware! You're the impostor!</b></p>
                                     </Show>
                                 </Show>
-                                <Show when={!Utils.isNotNullOrUndefined(knownWord())}>
+                                <Show when={!SharedUtils.isNotNullOrUndefined(knownWord())}>
                                     <p class='text-center'>Wait for the master to start the game!</p>
                                     <br />
                                     <p class='text-center'>In the meanwhile, you can look at the other players by clicking on Show Players</p>

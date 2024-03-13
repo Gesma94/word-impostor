@@ -1,6 +1,6 @@
 import { AiOutlineLoading3Quarters } from "solid-icons/ai";
 import { ParentProps, Show } from "solid-js";
-import Utils from "../../common/Utils";
+import { SharedUtils } from "@shared/utils/SharedUtils";
 
 export type TLoadScreenProps = {
     isVisible: boolean;
@@ -15,10 +15,10 @@ export const LoadScreen = (props: ParentProps<TLoadScreenProps>) => {
                     <span class="flex place-content-center animate-spin">
                         <AiOutlineLoading3Quarters />
                     </span>
-                    <Show when={Utils.isNotNullOrUndefined(props.children)}>
+                    <Show when={SharedUtils.isNotNullOrUndefined(props.children)}>
                         {props.children}
                     </Show>
-                    <Show when={Utils.isNullOrUndefined(props.children)}>
+                    <Show when={SharedUtils.isNullOrUndefined(props.children)}>
                         <p class="mt-2">{props.message}</p>
                     </Show>
                 </div>

@@ -1,7 +1,6 @@
 export const WS_MESSAGE_EVENT_CREATE_ROOM = 'create-room';
 export const WS_MESSAGE_EVENT_START_ROOM = 'start-room';
 export const WS_MESSAGE_EVENT_PLAYER_JOIN = 'player-joined';
-export const WS_MESSAGE_EVENT_PLAYER_LEFT = 'player-left';
 export const WS_MESSAGE_EVENT_ROOM_STARTED = 'room-started';
 
 export const PARAM_KEY_SECRET_WORD = 'secretWord';

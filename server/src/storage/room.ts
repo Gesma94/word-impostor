@@ -1,5 +1,6 @@
+import { TCurrentRoundDetails, TPlayerPool } from "src/types/roomTypes";
 import Utils from "../Utils";
-import { TCurrentRoundDetails, TPlayerPool, TWsConnection } from "../schemas";
+import { TWsConnection } from "../types/webSocketTypes";
 
 export class Room {
     public roomId: string;

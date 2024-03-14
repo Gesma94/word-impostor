@@ -105,7 +105,16 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
+
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": [ "./../shared/src/*" ]
+    }
   },
+  "include": ["src", "./../shared/src"],
+  "references": [
+    { "path": "./../shared" }
+  ],
   "exclude": [
     "dist",
     "node_modules"

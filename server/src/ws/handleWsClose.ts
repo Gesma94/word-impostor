@@ -1,8 +1,8 @@
+import { TWsMasterLeftRoomMessage, TWsPlayerLeftRoomMessage } from "@shared/types/WebSocketTypes";
 import Utils from "../Utils";
-import { WS_MSG_EVT_MASTER_LEFT_ROOM } from "../constants";
-import { IWsMasterLeftRoomMessage, IWsPlayerLeftRoomMessage } from "../schemas";
 import { Room } from "../storage/room";
 import { roomStore } from "../storage/roomStore";
+import { WS_MSG_EVENTS_CONST } from "@shared/constants/WebSocket";
 
 export function handleWsClose(userConnectionUuid: string) {
     const roomsWithUser = roomStore.getByConnectionUuid(userConnectionUuid);
@@ -31,8 +31,8 @@ function handleMasterLeave(userConnectionUuid: string, room: Room) {
     }
 
     // Otherwise, notifying all players and creating a remove callback
-    const message: IWsMasterLeftRoomMessage = {
-        event: WS_MSG_EVT_MASTER_LEFT_ROOM,
+    const message: TWsMasterLeftRoomMessage = {
+        event: WS_MSG_EVENTS_CONST.MASTER_LEFT_ROOM,
         payload: {}
     }
 
@@ -66,8 +66,8 @@ function handlePlayerLeave(userConnectionUuid: string, room: Room) {
     }
 
     // Otherwise, notifying the master and all other players
-    const messageToOtherPlayers: IWsPlayerLeftRoomMessage = {
-        event: "WS_MSG_EVT_PLAYER_LEFT_ROOM",
+    const messageToOtherPlayers: TWsPlayerLeftRoomMessage = {
+        event: WS_MSG_EVENTS_CONST.PLAYER_LEFT_ROOM,
         payload: { playerUuid: leavingPlayer.uuid }
     }
 

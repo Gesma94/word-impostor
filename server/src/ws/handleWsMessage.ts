@@ -1,11 +1,11 @@
 import { WebSocket, RawData } from "ws";
-import { IWebSocketMessage, IWsMasterJoinedRoomMessage, IWsMasterJoinRoomResponseMessage, IWsPlayerJoinRoomResponseMessage, IWsPlayerJoinedRoomMessage, IWsPlayerLeftRoomMessage, IWsRoundStartedMessage, WsMasterIsPlayingPayload, WsMasterJoinRoomPayload, WsPlayerJoinRoomPayload, WsPlayerJoinRoomResponsePayload, WsStartRoundPayload } from "../schemas";
-import { WS_MSG_EVT_MASTER_IS_PLAYING, WS_MSG_EVT_MASTER_JOINED_ROOM, WS_MSG_EVT_MASTER_JOIN_ROOM_RESPONSE, WS_MSG_EVT_MASTER_JOIN_ROOM, WS_MSG_EVT_PLAYER_JOIN_ROOM, WS_MSG_EVT_ROUND_STARTED, WS_MSG_EVT_START_ROUND, WS_MSG_EVT_PLAYER_JOINED_ROOM } from "../constants";
 import { roomStore } from "../storage/roomStore";
 import Utils from "../Utils";
+import { TWebSocketMessage, TWsMasterIsPlayingPayload, TWsMasterJoinRoomPayload, TWsMasterJoinRoomResponseMessage, TWsMasterJoinedRoomMessage, TWsPlayerJoinRoomPayload, TWsPlayerJoinRoomResponseMessage, TWsPlayerJoinedRoomMessage, TWsPlayerLeftRoomMessage, TWsRoundStartPayload, TWsRoundStartedMessage } from "@shared/types/WebSocketTypes";
+import { WS_MSG_EVENTS_CONST } from "@shared/constants/WebSocket";
 
 export function handleWsMessage(socket: WebSocket, data: RawData, userConnectionUuid: string) {
-    let message: IWebSocketMessage;
+    let message: TWebSocketMessage;
 
     try {
         message = JSON.parse(data.toString());
@@ -15,25 +15,25 @@ export function handleWsMessage(socket: WebSocket, data: RawData, userConnection
     }
 
     switch (message.event) {
-        case WS_MSG_EVT_MASTER_JOIN_ROOM:
+        case WS_MSG_EVENTS_CONST.MASTER_JOIN_ROOM:
             handleMasterJoinRoom(socket, message.payload, userConnectionUuid);
             break;
 
-        case WS_MSG_EVT_PLAYER_JOIN_ROOM:
+        case WS_MSG_EVENTS_CONST.PLAYER_JOIN_ROOM:
             handlePlayerJoinRoom(socket, message.payload, userConnectionUuid);
             break;
 
-        case WS_MSG_EVT_MASTER_IS_PLAYING:
+        case WS_MSG_EVENTS_CONST.MASTER_IS_PLAYING:
             handleMasterIsPlaying(socket, message.payload, userConnectionUuid);
             break;
 
-        case WS_MSG_EVT_START_ROUND:
+        case WS_MSG_EVENTS_CONST.START_ROUND:
             handleStartRound(socket, message.payload, userConnectionUuid);
             break;
     }
 }
 
-function handleMasterJoinRoom(socket: WebSocket, payload: WsMasterJoinRoomPayload, userConnectionUuid: string) {
+function handleMasterJoinRoom(socket: WebSocket, payload: TWsMasterJoinRoomPayload, userConnectionUuid: string) {
     const room = roomStore.get(payload.roomId);
 
     if (Utils.isNullOrUndefined(room)) {
@@ -50,8 +50,8 @@ function handleMasterJoinRoom(socket: WebSocket, payload: WsMasterJoinRoomPayloa
         clearTimeout(room.removerCallbackUuid);
     }
 
-    const message: IWsMasterJoinedRoomMessage = {
-        event: WS_MSG_EVT_MASTER_JOINED_ROOM,
+    const message: TWsMasterJoinedRoomMessage = {
+        event: WS_MSG_EVENTS_CONST.MASTER_JOINED_ROOM,
         payload: {}
     }
 
@@ -63,11 +63,12 @@ function handleMasterJoinRoom(socket: WebSocket, payload: WsMasterJoinRoomPayloa
 
     var playerWord = room.getPlayerKnonwWord(payload.masterUuid);
 
-    const messageResponse: IWsMasterJoinRoomResponseMessage = {
-        event: WS_MSG_EVT_MASTER_JOIN_ROOM_RESPONSE,
+    const messageResponse: TWsMasterJoinRoomResponseMessage = {
+        event: WS_MSG_EVENTS_CONST.MASTER_JOIN_ROOM_RESPONSE,
         payload: {
             currentRound: room.currentRound,
             hasStarted: room.hasStarted,
+            impostorHasHint: room.getPlayerImpostorHasHint(payload.masterUuid),          
             players: Object.values(room.players).map(x => ({ uuid: x.uuid, username: x.username })),
             playerWord: playerWord ?? null
         }
@@ -76,7 +77,7 @@ function handleMasterJoinRoom(socket: WebSocket, payload: WsMasterJoinRoomPayloa
     room.sendToMaster(messageResponse);
 }
 
-function handlePlayerJoinRoom(socket: WebSocket, payload: WsPlayerJoinRoomPayload, userConnectionUuid: string) {
+function handlePlayerJoinRoom(socket: WebSocket, payload: TWsPlayerJoinRoomPayload, userConnectionUuid: string) {
     let username = payload.username;
     const room = roomStore.get(payload.roomId);
 
@@ -91,8 +92,8 @@ function handlePlayerJoinRoom(socket: WebSocket, payload: WsPlayerJoinRoomPayloa
     }
     else {
         // In case the player was not connected already, add him and notify anyone else, including the master
-        const messageToOtherPlayer: IWsPlayerJoinedRoomMessage = {
-            event: "WS_MSG_EVT_PLAYER_JOINED_ROOM",
+        const messageToOtherPlayer: TWsPlayerJoinedRoomMessage = {
+            event: WS_MSG_EVENTS_CONST.PLAYER_JOINED_ROOM,
             payload: { playerUuid: payload.playerUuid, username: payload.username }
         }
 
@@ -103,8 +104,8 @@ function handlePlayerJoinRoom(socket: WebSocket, payload: WsPlayerJoinRoomPayloa
         });
 
         // Notify the master that a new player joined
-        const messageToMaster: IWsPlayerJoinedRoomMessage = {
-            event: "WS_MSG_EVT_PLAYER_JOINED_ROOM",
+        const messageToMaster: TWsPlayerJoinedRoomMessage = {
+            event: WS_MSG_EVENTS_CONST.PLAYER_JOINED_ROOM,
             payload: { playerUuid: payload.playerUuid, username: payload.username }
         }
 
@@ -124,8 +125,8 @@ function handlePlayerJoinRoom(socket: WebSocket, payload: WsPlayerJoinRoomPayloa
     // and he was part of the current round
     var playerWord = room.getPlayerKnonwWord(payload.playerUuid);
 
-    const messageToNewPlayer: IWsPlayerJoinRoomResponseMessage = {
-        event: "WS_MSG_EVT_PLAYER_JOIN_ROOM_RESPONSE",
+    const messageToNewPlayer: TWsPlayerJoinRoomResponseMessage = {
+        event: WS_MSG_EVENTS_CONST.PLAYER_JOIN_ROOM_RESPONSE,
         payload: {
             currentRound: room.currentRound,
             hasStarted: room.hasStarted,
@@ -140,7 +141,7 @@ function handlePlayerJoinRoom(socket: WebSocket, payload: WsPlayerJoinRoomPayloa
     return;
 }
 
-function handleMasterIsPlaying(socket: WebSocket, payload: WsMasterIsPlayingPayload, userConnectionUuid: string) {
+function handleMasterIsPlaying(socket: WebSocket, payload: TWsMasterIsPlayingPayload, userConnectionUuid: string) {
     let username = payload.username;
     let isPlaying = payload.isPlaying;
     let playerUuid = payload.playerUuid;
@@ -158,8 +159,8 @@ function handleMasterIsPlaying(socket: WebSocket, payload: WsMasterIsPlayingPayl
         }
         else {
             // In case the player was not connected already, add him and notify anyone else, including the master
-            const messageToOtherPlayer: IWsPlayerJoinedRoomMessage = {
-                event: WS_MSG_EVT_PLAYER_JOINED_ROOM,
+            const messageToOtherPlayer: TWsPlayerJoinedRoomMessage = {
+                event: WS_MSG_EVENTS_CONST.PLAYER_JOINED_ROOM,
                 payload: { playerUuid: playerUuid, username: payload.username }
             }
 
@@ -170,8 +171,8 @@ function handleMasterIsPlaying(socket: WebSocket, payload: WsMasterIsPlayingPayl
             });
 
             // Notify the master that a new player joined
-            const messageToMaster: IWsPlayerJoinedRoomMessage = {
-                event: WS_MSG_EVT_PLAYER_JOINED_ROOM,
+            const messageToMaster: TWsPlayerJoinedRoomMessage = {
+                event: WS_MSG_EVENTS_CONST.PLAYER_JOINED_ROOM,
                 payload: { playerUuid: playerUuid, username: payload.username }
             }
 
@@ -216,8 +217,8 @@ function handleMasterIsPlaying(socket: WebSocket, payload: WsMasterIsPlayingPayl
         }
 
         // Otherwise, notifying the master and all other players
-        const messageToOtherPlayers: IWsPlayerLeftRoomMessage = {
-            event: "WS_MSG_EVT_PLAYER_LEFT_ROOM",
+        const messageToOtherPlayers: TWsPlayerLeftRoomMessage = {
+            event: WS_MSG_EVENTS_CONST.PLAYER_LEFT_ROOM,
             payload: { playerUuid: leavingPlayer.uuid }
         }
 
@@ -229,7 +230,7 @@ function handleMasterIsPlaying(socket: WebSocket, payload: WsMasterIsPlayingPayl
     }
 }
 
-function handleStartRound(socket: WebSocket, payload: WsStartRoundPayload, userConnectionUuid: string) {
+function handleStartRound(socket: WebSocket, payload: TWsRoundStartPayload, userConnectionUuid: string) {
     const room = roomStore.get(payload.roomId);
 
     if (Utils.isNullOrUndefined(room)) {
@@ -251,8 +252,8 @@ function handleStartRound(socket: WebSocket, payload: WsStartRoundPayload, userC
     const currentRound = room.startRound(playersWithSecret.map(x => x.uuid), impostor.uuid, secretWord, impostorWord, payload.impostorHasHint);
 
     playersWithSecret.forEach(playerWithSecret => {
-        const messageToPlayerWithSecret: IWsRoundStartedMessage = {
-            event: WS_MSG_EVT_ROUND_STARTED,
+        const messageToPlayerWithSecret: TWsRoundStartedMessage = {
+            event: WS_MSG_EVENTS_CONST.ROUND_STARTED,
             payload: {
                 impostorHint: false,
                 round: currentRound,
@@ -263,8 +264,8 @@ function handleStartRound(socket: WebSocket, payload: WsStartRoundPayload, userC
         room.sendToPlayer(playerWithSecret.uuid, messageToPlayerWithSecret);
     });
 
-    const messageToImpostor: IWsRoundStartedMessage = {
-        event: WS_MSG_EVT_ROUND_STARTED,
+    const messageToImpostor: TWsRoundStartedMessage = {
+        event: WS_MSG_EVENTS_CONST.ROUND_STARTED,
         payload: {
             round: currentRound,
             knownWord: impostorWord,

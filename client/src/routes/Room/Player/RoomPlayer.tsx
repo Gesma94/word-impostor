@@ -9,8 +9,8 @@ import { createBusyContent } from '../../../signals/useBusyContent';
 import { SecretWord } from '../../../components/SecretWord/SecretWord';
 import { SharedUtils } from '@shared/utils/SharedUtils';
 import { TPlayer } from '@shared/types/SharedTypes';
-import { TWebSocketMessage, TWsPlayerJoinRoomMessage, TWsPlayerJoinRoomResponsePayload, TWsPlayerJoinedRoomPayload, TWsPlayerLeftRoomPayload, TWsRoundStartedPayload } from '@shared/types/WebSocket';
-import { WS_MSG_EVENTS } from '@shared/constants/WebSocket';
+import { TWebSocketMessage, TWsPlayerJoinRoomMessage, TWsPlayerJoinRoomResponsePayload, TWsPlayerJoinedRoomPayload, TWsPlayerLeftRoomPayload, TWsRoundStartedPayload } from '@shared/types/WebSocketTypes';
+import { WS_MSG_EVENTS_CONST } from '@shared/constants/WebSocket';
 
 type TRoomPlayerParams = {
     roomId: string;
@@ -49,7 +49,7 @@ export const RoomPlayer = () => {
         }
 
         const wsEventCreateRoom: TWsPlayerJoinRoomMessage = {
-            event: WS_MSG_EVENTS.PLAYER_JOIN_ROOM,
+            event: WS_MSG_EVENTS_CONST.PLAYER_JOIN_ROOM,
             payload: {
                 roomId: params.roomId,
                 playerUuid: Utils.getUserUuid(),
@@ -64,22 +64,22 @@ export const RoomPlayer = () => {
         const message: TWebSocketMessage = JSON.parse(e.data);
 
         switch (message.event) {
-            case WS_MSG_EVENTS.PLAYER_JOIN_ROOM_RESPONSE:
+            case WS_MSG_EVENTS_CONST.PLAYER_JOIN_ROOM_RESPONSE:
                 handleWsPlayerJoinResponse(message.payload);
                 break;
-            case WS_MSG_EVENTS.PLAYER_JOINED_ROOM:
+            case WS_MSG_EVENTS_CONST.PLAYER_JOINED_ROOM:
                 handleWsPlayerJoinedRoom(message.payload);
                 break;
-            case WS_MSG_EVENTS.PLAYER_LEFT_ROOM:
+            case WS_MSG_EVENTS_CONST.PLAYER_LEFT_ROOM:
                 handleWsPlayerLeft(message.payload);
                 break;
-            case WS_MSG_EVENTS.MASTER_LEFT_ROOM:
+            case WS_MSG_EVENTS_CONST.MASTER_LEFT_ROOM:
                 handleWsMasterLeft(message.payload);
                 break;
-            case WS_MSG_EVENTS.MASTER_JOINED_ROOM:
+            case WS_MSG_EVENTS_CONST.MASTER_JOINED_ROOM:
                 handleWsMasterJoined(message.payload);
                 break;
-            case WS_MSG_EVENTS.ROUND_STARTED:
+            case WS_MSG_EVENTS_CONST.ROUND_STARTED:
                 handleWsRoundStarted(message.payload);            
                 break;
         }

@@ -10,8 +10,8 @@ import { VsLink } from 'solid-icons/vs';
 import { RiUserFacesUser3Line } from 'solid-icons/ri';
 import { SharedUtils } from '@shared/utils/SharedUtils';
 import { TPlayer } from '@shared/types/SharedTypes';
-import { TWebSocketMessage, TWsMasterIsPlayingMessage, TWsMasterJoinRoomMessage, TWsMasterJoinRoomResponsePayload, TWsPlayerJoinedRoomPayload, TWsPlayerLeftRoomPayload, TWsRoundStartedPayload, TWsStartRoundMessage } from '@shared/types/WebSocket';
-import { WS_MSG_EVENTS } from '@shared/constants/WebSocket';
+import { TWebSocketMessage, TWsMasterIsPlayingMessage, TWsMasterJoinRoomMessage, TWsMasterJoinRoomResponsePayload, TWsPlayerJoinedRoomPayload, TWsPlayerLeftRoomPayload, TWsRoundStartedPayload, TWsStartRoundMessage } from '@shared/types/WebSocketTypes';
+import { WS_MSG_EVENTS_CONST } from '@shared/constants/WebSocket';
 
 type TRoomMasterParams = {
     roomId: string;
@@ -72,7 +72,7 @@ export const RoomMaster = () => {
 
     const startRound = () => {
         const WsStartRoundMessage: TWsStartRoundMessage = {
-            event: WS_MSG_EVENTS.START_ROUND,
+            event: WS_MSG_EVENTS_CONST.START_ROUND,
             payload: {
                 roomId: roomId,
                 secretWord: secretWord(),
@@ -114,7 +114,7 @@ export const RoomMaster = () => {
         setIsWsOpen(true);
 
         const wsCreateRoomMessage: TWsMasterJoinRoomMessage = {
-            event: WS_MSG_EVENTS.MASTER_JOIN_ROOM,
+            event: WS_MSG_EVENTS_CONST.MASTER_JOIN_ROOM,
             payload: {
                 roomId: roomId,
                 masterUuid: Utils.getUserUuid()
@@ -150,16 +150,16 @@ export const RoomMaster = () => {
     const handleWsMessage = (e: MessageEvent) => {
         const message: TWebSocketMessage = JSON.parse(e.data);
 
-        if (message.event === WS_MSG_EVENTS.PLAYER_JOINED_ROOM) {
+        if (message.event === WS_MSG_EVENTS_CONST.PLAYER_JOINED_ROOM) {
             handleWsPlayerJoin(message.payload);
         }
-        if (message.event === WS_MSG_EVENTS.PLAYER_LEFT_ROOM) {
+        if (message.event === WS_MSG_EVENTS_CONST.PLAYER_LEFT_ROOM) {
             handleWsPlayerLeft(message.payload);
         }
-        if (message.event === WS_MSG_EVENTS.ROUND_STARTED) {
+        if (message.event === WS_MSG_EVENTS_CONST.ROUND_STARTED) {
             handleWsRoundStarted(message.payload);    
         }
-        if (message.event === WS_MSG_EVENTS.MASTER_JOIN_ROOM_RESPONSE) {
+        if (message.event === WS_MSG_EVENTS_CONST.MASTER_JOIN_ROOM_RESPONSE) {
             handleWsMasterJoinRoomResponse(message.payload)
         }
     }
@@ -179,7 +179,7 @@ export const RoomMaster = () => {
         }
 
         const WsMasterIsPlayingMessage: TWsMasterIsPlayingMessage = {
-            event: WS_MSG_EVENTS.MASTER_IS_PLAYING,
+            event: WS_MSG_EVENTS_CONST.MASTER_IS_PLAYING,
             payload: {
                 roomId: roomId,
                 isPlaying: isPlaying,

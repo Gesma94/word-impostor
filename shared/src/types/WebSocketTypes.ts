@@ -1,7 +1,7 @@
-import { WS_MSG_EVENTS } from "../constants/WebSocket";
+import { WS_MSG_EVENTS_CONST } from "../constants/WebSocket";
 import { TPlayer, ValueOf } from "./SharedTypes";
 
-export type TWsMsgEvent = ValueOf<typeof WS_MSG_EVENTS>;
+export type TWsMsgEvent = ValueOf<typeof WS_MSG_EVENTS_CONST>;
 
 type TWsMessageBase<TEvent extends TWsMsgEvent, TPayload> = {
     event: TEvent;
@@ -77,37 +77,37 @@ export type TWsPlayerLeftRoomPayload = {
 }
 
 /** Websocket message sent from the client to the server when a player wants to join a room */
-export type TWsPlayerJoinRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS.PLAYER_JOIN_ROOM, TWsPlayerJoinRoomPayload>;
+export type TWsPlayerJoinRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.PLAYER_JOIN_ROOM, TWsPlayerJoinRoomPayload>;
 
 /** Websocket message sent from the server to a client in response of the player has joined the room */
-export type TWsPlayerJoinRoomResponseMessage = TWsMessageBase<typeof WS_MSG_EVENTS.PLAYER_JOIN_ROOM_RESPONSE, TWsPlayerJoinRoomResponsePayload>;
+export type TWsPlayerJoinRoomResponseMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.PLAYER_JOIN_ROOM_RESPONSE, TWsPlayerJoinRoomResponsePayload>;
 
 /** Websocket message sent from the server to multiple clients when a player has joined a room */
-export type TWsPlayerJoinedRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS.PLAYER_JOINED_ROOM, TWsPlayerJoinedRoomPayload>;
+export type TWsPlayerJoinedRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.PLAYER_JOINED_ROOM, TWsPlayerJoinedRoomPayload>;
 
 /** Websocket message sent from the client to the server when the master wants to start a round */
-export type TWsStartRoundMessage = TWsMessageBase<typeof WS_MSG_EVENTS.START_ROUND, TWsRoundStartPayload>;
+export type TWsStartRoundMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.START_ROUND, TWsRoundStartPayload>;
 
 /** Websocket message sent from the server to multiple clients when the master has started a round */
-export type TWsRoundStartedMessage = TWsMessageBase<typeof WS_MSG_EVENTS.ROUND_STARTED, TWsRoundStartedPayload>;
+export type TWsRoundStartedMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.ROUND_STARTED, TWsRoundStartedPayload>;
 
 /** Websocket message sent from the client to the server when the master joins its room */
-export type TWsMasterJoinRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS.MASTER_JOIN_ROOM, TWsMasterJoinRoomPayload>;
+export type TWsMasterJoinRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.MASTER_JOIN_ROOM, TWsMasterJoinRoomPayload>;
 
 /** Websocket message sent from the server to the client from which the master has joined the room */
-export type TWsMasterJoinRoomResponseMessage = TWsMessageBase<typeof WS_MSG_EVENTS.MASTER_JOIN_ROOM_RESPONSE, TWsMasterJoinRoomResponsePayload>;
+export type TWsMasterJoinRoomResponseMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.MASTER_JOIN_ROOM_RESPONSE, TWsMasterJoinRoomResponsePayload>;
 
 /** Websocket message sent from the server to multiple clients when the master has joined its room */
-export type TWsMasterJoinedRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS.MASTER_JOINED_ROOM, {}>;
+export type TWsMasterJoinedRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.MASTER_JOINED_ROOM, {}>;
 
 /** Websocket message sent from the client to the server when the master toggle himself as player or non-player */
-export type TWsMasterIsPlayingMessage = TWsMessageBase<typeof WS_MSG_EVENTS.MASTER_IS_PLAYING, TWsMasterIsPlayingPayload>;
+export type TWsMasterIsPlayingMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.MASTER_IS_PLAYING, TWsMasterIsPlayingPayload>;
 
 /** Websocket message sent from the server to multiple clients when a player has left a room */
-export type TWsPlayerLeftRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS.PLAYER_LEFT_ROOM, TWsPlayerLeftRoomPayload>;
+export type TWsPlayerLeftRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.PLAYER_LEFT_ROOM, TWsPlayerLeftRoomPayload>;
 
 /** Websocket message sent from the server to multiple clients when a master has left its room */
-export type TWsMasterLeftRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS.MASTER_LEFT_ROOM, {}>;
+export type TWsMasterLeftRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.MASTER_LEFT_ROOM, {}>;
 
 /** Specifies any possible Websocket message */
 export type TWebSocketMessage = TWsPlayerJoinRoomMessage

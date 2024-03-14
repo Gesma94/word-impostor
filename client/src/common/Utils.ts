@@ -1,16 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
-import { LOCAL_STORAGE_USER_USERNAME_KEY, LOCAL_STORAGE_USER_UUID_KEY } from './constants';
 import { redirect } from '@solidjs/router';
 import { SharedUtils } from '@shared/utils/SharedUtils';
 import { TPlayer } from '@shared/types/SharedTypes';
+import { LOCAL_STORAGE_CONST } from './constants';
 
 export default class Utils {
     public static getUsername(): string | null {
-        return localStorage.getItem(LOCAL_STORAGE_USER_USERNAME_KEY) ?? null;
+        return localStorage.getItem(LOCAL_STORAGE_CONST.USER_UUID_KEY) ?? null;
     }
 
     public static setUsername(username: string): void {
-        localStorage.setItem(LOCAL_STORAGE_USER_USERNAME_KEY, username);
+        localStorage.setItem(LOCAL_STORAGE_CONST.USER_USERNAME_KEY, username);
     }
 
     public static getUsernameOrRedirect(): string {
@@ -25,14 +25,14 @@ export default class Utils {
     }
 
     public static getUserUuid(): string {
-        const cachedUuid = localStorage.getItem(LOCAL_STORAGE_USER_UUID_KEY);
+        const cachedUuid = localStorage.getItem(LOCAL_STORAGE_CONST.USER_UUID_KEY);
 
         if (SharedUtils.isNotNullOrUndefined(cachedUuid)) {
             return cachedUuid;
         }
 
         const newUuid = uuidv4();
-        localStorage.setItem(LOCAL_STORAGE_USER_UUID_KEY, newUuid);
+        localStorage.setItem(LOCAL_STORAGE_CONST.USER_UUID_KEY, newUuid);
 
         return newUuid;
     }

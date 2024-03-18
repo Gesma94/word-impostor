@@ -4,8 +4,9 @@
   "description": "Server for Word Impostor",
   "main": "src/server.ts",
   "scripts": {
+    "build-shared": "tsc --project ./../shared/tsconfig.json",
     "clean": "rimraf dist",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && npm run build-shared && tsc",
     "start:live": "nodemon src/server.ts",
     "start:render": "node ./dist/server.js",
     "start:debug": "nodemon src/server.ts"

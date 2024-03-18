@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build-common": "tsc --project ./../shared/tsconfig.json",
-    "dev": "npm run build-common && vite",
-    "dev-open": "npm run build-common && vite --host --open",
-    "build": "npm run build-common && tsc && vite build",
-    "preview": "npm run build-common && vite preview"
+    "build-shared": "tsc --project ./../shared/tsconfig.json",
+    "dev": "npm run build-shared && vite",
+    "dev-open": "npm run build-shared && vite --host --open",
+    "build": "npm run build-shared && tsc && vite build",
+    "preview": "npm run build-shared && vite preview"
   },
   "dependencies": {
     "@solidjs/router": "^0.10.6",

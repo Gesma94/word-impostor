@@ -11,11 +11,14 @@ import cors from 'cors';
 import { handleWsClose } from './ws/handleWsClose';
 import { handleWsOpen } from './ws/handleWsOpen';
 import { handleWsMessage } from './ws/handleWsMessage';
+import { SharedUtils } from '@shared/utils/SharedUtils';
 
-const coras = cors({ origin: ['http://localhost:5173', 'https://wordimpostor.gesma.dev'] });
+console.log(process.env.NODE_ENV);
+
 const app = express();
 const port = process.env.PORT || 7717;
 const wsServer = new Server({ noServer: true });
+const corsHandler = cors({ origin: SharedUtils.IsDevEnvironment() ? 'http://localhost:5173' : 'https://wordimpostor.gesma.dev' });
 
 const server = app.listen(port, async () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
@@ -39,7 +42,7 @@ wsServer.on('connection', socket => {
     socket.on('message', (rawData: RawData, _: boolean) => handleWsMessage(socket, rawData, connectionUuid));
 });
 
-app.use(coras);
+app.use(corsHandler);
 app.use("/room", roomRouter);
 
 app.get("/", (req: Request, res: Response) => {

@@ -1,5 +1,3 @@
-import * as process from 'process';
-
 export class SharedUtils {
     public static isNotNullOrUndefined<T>(value: T): value is NonNullable<T> {
         return value !== undefined && value !== null;

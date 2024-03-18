@@ -3,7 +3,7 @@ name: Client - Build 🏗️
 on:
   push:
     branches: [ "main" ]
-    paths: [ "client/**", "common/**", ".github/workflows/client-cd.yml" ]
+    paths: [ "client/**", "shared/**", ".github/workflows/client-cd.yml" ]
 
 jobs:      
   DeployOnCloudflare:

@@ -1,3 +1,5 @@
+require('module-alias/register');
+
 import { randomUUID } from 'crypto';
 import express, { response } from 'express';
 import type { Request, Response } from "express";

@@ -7,7 +7,7 @@ type TGetExistsParams = {
 }
 
 type TCreateRoomQueryParams = {
-    masterUuid: string;
+    ['master-uuid']: string;
 }
 
 type THasPermissionRoomParams = {
@@ -32,13 +32,14 @@ roomRouter.get<TGetExistsParams>('/:roomId/exists', (request, response) => {
 
 roomRouter.get<string, unknown, unknown, unknown, TCreateRoomQueryParams>('/create', (request, response) => {
 
-    const masterUuid = request.query.masterUuid;
+    const masterUuid = request.query['master-uuid'];
 
     if (SharedUtils.isNullOrUndefined(masterUuid) || masterUuid === '') {
         response.sendStatus(400);
+        return;
     }
     
-    const newRoom = roomStore.createRoom(request.query.masterUuid);
+    const newRoom = roomStore.createRoom(request.query["master-uuid"]);
 
     if (SharedUtils.isNullOrUndefined(newRoom)) {
         response.sendStatus(400);

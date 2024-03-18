@@ -1,13 +1,6 @@
 import { words } from "./words";
 
 export default class Utils {
-    public static isNotNullOrUndefined<T>(value: T): value is NonNullable<T> {
-        return value !== undefined && value !== null;
-    }
-
-    public static isNullOrUndefined(value: unknown): value is null | undefined {
-        return value === undefined || value === null;
-    }
     public static getImpostorIndex(max: number) {
         return Math.floor(Math.random() * max);
     }

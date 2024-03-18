@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { roomStore } from "../storage/roomStore";
-import Utils from "../Utils";
+import { SharedUtils } from "@shared/utils/SharedUtils";
 
 type TGetExistsParams = {
     roomId: string;
@@ -22,7 +22,7 @@ const roomRouter = Router();
 roomRouter.get<TGetExistsParams>('/:roomId/exists', (request, response) => {
     const roomId = request.params.roomId;
 
-    if (Utils.isNullOrUndefined(roomId) || !roomStore.hasRoom(roomId)) {
+    if (SharedUtils.isNullOrUndefined(roomId) || !roomStore.hasRoom(roomId)) {
         response.sendStatus(400);
         return;
     }
@@ -34,13 +34,13 @@ roomRouter.get<string, unknown, unknown, unknown, TCreateRoomQueryParams>('/crea
 
     const masterUuid = request.query.masterUuid;
 
-    if (Utils.isNullOrUndefined(masterUuid) || masterUuid === '') {
+    if (SharedUtils.isNullOrUndefined(masterUuid) || masterUuid === '') {
         response.sendStatus(400);
     }
     
     const newRoom = roomStore.createRoom(request.query.masterUuid);
 
-    if (Utils.isNullOrUndefined(newRoom)) {
+    if (SharedUtils.isNullOrUndefined(newRoom)) {
         response.sendStatus(400);
         return;
     }
@@ -52,14 +52,14 @@ roomRouter.get<string, THasPermissionRoomParams, unknown, unknown, THasPermissio
     const roomId = request.params.roomId;
     const masterUuid = request.query.masterUuid;
 
-    if (Utils.isNullOrUndefined(masterUuid) || Utils.isNullOrUndefined(roomId)) {
+    if (SharedUtils.isNullOrUndefined(masterUuid) || SharedUtils.isNullOrUndefined(roomId)) {
         response.sendStatus(400);
         return;
     }
 
     const room = roomStore.get(roomId);
 
-    if (Utils.isNullOrUndefined(room)) {
+    if (SharedUtils.isNullOrUndefined(room)) {
         response.sendStatus(400);
         return;
     }

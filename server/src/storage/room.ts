@@ -1,6 +1,7 @@
 import { TCurrentRoundDetails, TPlayerPool } from "src/types/roomTypes";
 import Utils from "../Utils";
 import { TWsConnection } from "../types/webSocketTypes";
+import { SharedUtils } from "@shared/utils/SharedUtils";
 
 export class Room {
     public roomId: string;
@@ -43,7 +44,7 @@ export class Room {
     public sendToPlayer(playerUuid: string, message: unknown) {
         const player = this.players[playerUuid];
 
-        if (Utils.isNullOrUndefined(player)) {
+        if (SharedUtils.isNullOrUndefined(player)) {
             return;
         }
 
@@ -53,7 +54,7 @@ export class Room {
     }
 
     public startRemoverCallbackTimeout() {
-        if (Utils.isNotNullOrUndefined(this.removerCallbackUuid)) {
+        if (SharedUtils.isNotNullOrUndefined(this.removerCallbackUuid)) {
             clearTimeout(this.removerCallbackUuid);
         }
 
@@ -61,7 +62,7 @@ export class Room {
     }
 
     public getPlayerKnonwWord(playerGuid: string): string | undefined {
-        if (Utils.isNullOrUndefined(this.currentRoundDetails) || Utils.isNullOrUndefined(this.currentRoundDetails.playersGuid)) {
+        if (SharedUtils.isNullOrUndefined(this.currentRoundDetails) || SharedUtils.isNullOrUndefined(this.currentRoundDetails.playersGuid)) {
             return undefined;
         }
 
@@ -78,7 +79,7 @@ export class Room {
     
 
     public getPlayerImpostorHasHint(playerGuid: string): boolean {
-        if (Utils.isNullOrUndefined(this.currentRoundDetails) || Utils.isNullOrUndefined(this.currentRoundDetails.playersGuid)) {
+        if (SharedUtils.isNullOrUndefined(this.currentRoundDetails) || SharedUtils.isNullOrUndefined(this.currentRoundDetails.playersGuid)) {
             return false;
         }
 

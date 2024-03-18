@@ -1,8 +1,8 @@
 import { TWsMasterLeftRoomMessage, TWsPlayerLeftRoomMessage } from "@shared/types/WebSocketTypes";
-import Utils from "../Utils";
 import { Room } from "../storage/room";
 import { roomStore } from "../storage/roomStore";
 import { WS_MSG_EVENTS_CONST } from "@shared/constants/WebSocket";
+import { SharedUtils } from "@shared/utils/SharedUtils";
 
 export function handleWsClose(userConnectionUuid: string) {
     const roomsWithUser = roomStore.getByConnectionUuid(userConnectionUuid);
@@ -45,7 +45,7 @@ function handlePlayerLeave(userConnectionUuid: string, room: Room) {
         .filter(x => x.connections.some(connection => connection.connectionUuid === userConnectionUuid));
 
     // Returning right away if the user is not a player
-    if (Utils.isNullOrUndefined(leavingPlayers) || leavingPlayers.length < 1) {
+    if (SharedUtils.isNullOrUndefined(leavingPlayers) || leavingPlayers.length < 1) {
         return;
     }
 

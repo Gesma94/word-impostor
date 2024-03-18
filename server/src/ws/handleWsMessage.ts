@@ -3,6 +3,7 @@ import { roomStore } from "../storage/roomStore";
 import Utils from "../Utils";
 import { TWebSocketMessage, TWsMasterIsPlayingPayload, TWsMasterJoinRoomPayload, TWsMasterJoinRoomResponseMessage, TWsMasterJoinedRoomMessage, TWsPlayerJoinRoomPayload, TWsPlayerJoinRoomResponseMessage, TWsPlayerJoinedRoomMessage, TWsPlayerLeftRoomMessage, TWsRoundStartPayload, TWsRoundStartedMessage } from "@shared/types/WebSocketTypes";
 import { WS_MSG_EVENTS_CONST } from "@shared/constants/WebSocket";
+import { SharedUtils } from "@shared/utils/SharedUtils";
 
 export function handleWsMessage(socket: WebSocket, data: RawData, userConnectionUuid: string) {
     let message: TWebSocketMessage;
@@ -36,17 +37,17 @@ export function handleWsMessage(socket: WebSocket, data: RawData, userConnection
 function handleMasterJoinRoom(socket: WebSocket, payload: TWsMasterJoinRoomPayload, userConnectionUuid: string) {
     const room = roomStore.get(payload.roomId);
 
-    if (Utils.isNullOrUndefined(room)) {
+    if (SharedUtils.isNullOrUndefined(room)) {
         return;
     }
 
-    if (Utils.isNotNullOrUndefined(room.masterConnections.find(x => x.connectionUuid !== userConnectionUuid))) {
+    if (SharedUtils.isNotNullOrUndefined(room.masterConnections.find(x => x.connectionUuid !== userConnectionUuid))) {
         return;
     }
 
     room.masterConnections.push({ connectionUuid: userConnectionUuid, socket });
 
-    if (Utils.isNotNullOrUndefined(room.removerCallbackUuid)) {
+    if (SharedUtils.isNotNullOrUndefined(room.removerCallbackUuid)) {
         clearTimeout(room.removerCallbackUuid);
     }
 
@@ -81,13 +82,13 @@ function handlePlayerJoinRoom(socket: WebSocket, payload: TWsPlayerJoinRoomPaylo
     let username = payload.username;
     const room = roomStore.get(payload.roomId);
 
-    if (Utils.isNullOrUndefined(room)) {
+    if (SharedUtils.isNullOrUndefined(room)) {
         return;
     }
 
     const alreadyConnectedPlayer = Object.values(room.players).find(x => x.uuid === payload.playerUuid);
 
-    if (Utils.isNotNullOrUndefined(alreadyConnectedPlayer)) {
+    if (SharedUtils.isNotNullOrUndefined(alreadyConnectedPlayer)) {
         alreadyConnectedPlayer.connections.push({ connectionUuid: userConnectionUuid, socket });
     }
     else {
@@ -147,14 +148,14 @@ function handleMasterIsPlaying(socket: WebSocket, payload: TWsMasterIsPlayingPay
     let playerUuid = payload.playerUuid;
     const room = roomStore.get(payload.roomId);
 
-    if (Utils.isNullOrUndefined(room)) {
+    if (SharedUtils.isNullOrUndefined(room)) {
         return;
     }
 
     if (isPlaying) {
         const alreadyConnectedPlayer = Object.values(room.players).find(x => x.uuid === playerUuid);
 
-        if (Utils.isNotNullOrUndefined(alreadyConnectedPlayer)) {
+        if (SharedUtils.isNotNullOrUndefined(alreadyConnectedPlayer)) {
             alreadyConnectedPlayer.connections.push({ connectionUuid: userConnectionUuid, socket });
         }
         else {
@@ -196,7 +197,7 @@ function handleMasterIsPlaying(socket: WebSocket, payload: TWsMasterIsPlayingPay
         .filter(x => x.connections.some(connection => connection.connectionUuid === userConnectionUuid));
 
         // Returning right away if the user is not a player
-        if (Utils.isNullOrUndefined(leavingPlayers) || leavingPlayers.length < 1) {
+        if (SharedUtils.isNullOrUndefined(leavingPlayers) || leavingPlayers.length < 1) {
             return;
         }
 
@@ -233,7 +234,7 @@ function handleMasterIsPlaying(socket: WebSocket, payload: TWsMasterIsPlayingPay
 function handleStartRound(socket: WebSocket, payload: TWsRoundStartPayload, userConnectionUuid: string) {
     const room = roomStore.get(payload.roomId);
 
-    if (Utils.isNullOrUndefined(room)) {
+    if (SharedUtils.isNullOrUndefined(room)) {
         return;
     }
 

@@ -13,8 +13,6 @@ import { handleWsOpen } from './ws/handleWsOpen';
 import { handleWsMessage } from './ws/handleWsMessage';
 import { SharedUtils } from '@shared/utils/SharedUtils';
 
-console.log(process.env.NODE_ENV);
-
 const app = express();
 const port = process.env.PORT || 7717;
 const wsServer = new Server({ noServer: true });

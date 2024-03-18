@@ -21,7 +21,7 @@ export const ROUTES = {
     ROOM: "/room",
     ERROR: "/error",
     ROOM_MASTER: function(roomId: string) {
-        return `/${this.ROOM}/${roomId}/master`
+        return `${this.ROOM}/${roomId}/master`
     }
 } as const;
 

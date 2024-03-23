@@ -207,6 +207,13 @@ export const RoomMaster = () => {
                 return;
             }
 
+            const apiResult = new Boolean(apiResponse.text());
+
+            if (!apiResult) {
+                navigate('/error');
+                return;
+            }
+            
             const wsUrl = import.meta.env.VITE_SERVER_BASE_WS_URL;
 
             webSocket = new WebSocket(wsUrl);

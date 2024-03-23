@@ -1,3 +1,5 @@
+import { PARAM_KEY } from "@shared/constants/SharedConstants";
+
 /** Specifies the base URL for API calls */
 export const BASE_API_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
@@ -10,11 +12,6 @@ export const LOCAL_STORAGE_CONST = {
     USER_UUID_KEY: '__word_impostor_user_uuid__',
     /** Specifies the local storage key that stores the user username */
     USER_USERNAME_KEY: '__word_impostor_user_username__'
-} as const;
-
-/** Object that contains constants related to query parameter keys */
-export const PARAM_KEY = {
-    MASTER_UUID: "master-uuid"
 } as const;
 
 export const ROUTES = {

@@ -29,13 +29,19 @@ export const JoinRoom = () => {
         try {
             const apiResponse = await fetch(`${apiUrl}/room/${roomId()}/exists`);
             await Utils.delay(1000);
+            
+            if (!apiResponse.ok) {
+                setError(`Error while communicating with the server`);
+            }
 
-            if (apiResponse.ok) {
-                navigate(`/room/${roomId()}`);
-            }
-            else {
+            const apiResult = new Boolean(apiResponse.text());
+
+            if (!apiResult) {
                 setError(`Cannot connect to room '${roomId()}'`);
+                return;
             }
+            
+            navigate(`/room/${roomId()}`);
         }
         catch (e) {
             setError(`Error while communicating with the server`);

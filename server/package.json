@@ -2,36 +2,38 @@
   "name": "word-impostor-server",
   "version": "0.0.1",
   "description": "Server for Word Impostor",
-  "main": "src/server.ts",
+  "main": "src/main.ts",
   "scripts": {
-    "build-shared": "cd ../shared && npm run build:prod",
     "clean": "rimraf dist",
+    "build-shared": "cd ../shared && npm run build",
+    "clean-node-modules": "rimraf --glob node_modules",
     "build": "npm run clean && npm run build-shared && tsc",
-    "start:live": "set NODE_ENV=production && nodemon src/server.ts",
-    "start:render": "set NODE_ENV=production && node ./dist/server.js",
-    "start:debug": "set NODE_ENV=development && nodemon src/server.ts"
+    "clean-install": "npm run clean-node-modules && npm install",
+    "start:render": "set NODE_ENV=production && node ./dist/main.js",
+    "start:debug": "set NODE_ENV=development && nodemon src/main.ts",
+    "check-circular-deps": "npx madge --circular --extensions js,ts,tsx,jsx ./src"
   },
   "author": "Matteo Gesmundo",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
-    "express": "^4.18.2",
+    "express": "^4.19.1",
     "module-alias": "^2.2.3",
-    "nodemon": "^3.0.2",
-    "sqlite3": "^5.1.7-rc.0",
+    "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
     "ws": "^8.16.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "@types/node": "^20.10.6",
+    "@types/node": "^20.11.30",
     "@types/ws": "^8.5.10",
+    "madge": "^6.1.0",
     "rimraf": "^5.0.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "_moduleAliases": {
+    "src": "./dist",
     "@shared": "./../shared/dist"
   }
 }

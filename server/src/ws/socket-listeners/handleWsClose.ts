@@ -1,6 +1,6 @@
 import { TWsMasterLeftRoomMessage, TWsPlayerLeftRoomMessage } from "@shared/types/WebSocketTypes";
-import { Room } from "../storage/room";
-import { roomStore } from "../storage/roomStore";
+import { Room } from "../../storage/room";
+import { roomStore } from "../../storage/roomStore";
 import { WS_MSG_EVENTS_CONST } from "@shared/constants/WebSocket";
 import { SharedUtils } from "@shared/utils/SharedUtils";
 
@@ -17,7 +17,7 @@ function handleMasterLeave(userConnectionUuid: string, room: Room) {
     const indexInMasterConnections = room.masterConnections
         .findIndex(x => x.connectionUuid === userConnectionUuid);
 
-    // Returning right away if the user is not a master
+    // Returning right away if the connection is not in the master ones
     if (indexInMasterConnections === -1) {
         return;
     }
@@ -41,18 +41,16 @@ function handleMasterLeave(userConnectionUuid: string, room: Room) {
 }
 
 function handlePlayerLeave(userConnectionUuid: string, room: Room) {
-    const leavingPlayers = Object.values(room.players)
-        .filter(x => x.connections.some(connection => connection.connectionUuid === userConnectionUuid));
+    const leavingPlayer = room.getPlayerByConnection(userConnectionUuid);
 
-    // Returning right away if the user is not a player
-    if (SharedUtils.isNullOrUndefined(leavingPlayers) || leavingPlayers.length < 1) {
+     // Returning right away if the user is not a player
+     if (SharedUtils.isNullOrUndefined(leavingPlayer)) {
         return;
     }
 
-    const leavingPlayer = leavingPlayers[0];
     const indexInConnections = leavingPlayer.connections.findIndex(x => x.connectionUuid === userConnectionUuid);
 
-    // Returning right away if the user is not a player
+    // Returning right away if the current connection is not for the leaving player
     if (indexInConnections === -1) {
         return;
     }

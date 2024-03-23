@@ -1,21 +1,26 @@
 import { Room } from "./room";
 
+/** Specifies a class that acts like a storage for {@link Room} */
 class RoomStore {
     private _rooms = new Map<string, Room>();
 
+    /** Returns the room identified by {@link roomId}, or `null` if it does not exists */
     public get(roomId: string): Room | null {
         return this._rooms.get(roomId) ?? null;
     }
 
+    /** Deletes, if exists, the room identified by {@link roomId}, and returns `true` if the room was actually deleted */
     public delete(roomId: string): boolean {
         return this._rooms.delete(roomId);
     }
 
+    /** Returns `true` if the store contains the room identified by {@link roomId} */
     public hasRoom(roomId: string): boolean {
         return this._rooms.has(roomId);
     }
 
-    public hasRoomPermission(roomId: string, userUuid: string): boolean {
+    /** Returns `true` if the user identified by {@link userUuid} has master permission over the room identified by {@link roomId} */
+    public hasMasterPermission(roomId: string, userUuid: string): boolean {
         const room = this._rooms.get(roomId);
 
         if (room !== undefined && room.masterUuid === userUuid) {
@@ -25,6 +30,9 @@ class RoomStore {
         return false;
     }
 
+    /** Creates a new room with the master permission assigned to the user 
+     * identified by {@link masterUuid}; returns the new room, or `null` if the room was not created 
+     */
     public createRoom(masterUuid: string): Room | null {
         const roomId = this.generateRoomId();
 
@@ -38,7 +46,8 @@ class RoomStore {
         return newRoom;
     }
 
-    public getByConnectionUuid(connectionUuid: string) {
+    /** Returns all the rooms where the {@link connectionUuid} is connected to, both as a player and as a master */
+    public getByConnectionUuid(connectionUuid: string): Room[] {
         const rooms : Room[] = [];
         
         for (let room of this._rooms.values()) {
@@ -57,6 +66,7 @@ class RoomStore {
 
         return rooms;
     }
+
 
     private generateRoomId(): string {
         let isValid = false;

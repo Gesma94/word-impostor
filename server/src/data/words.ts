@@ -7,4 +7,4 @@ export const words = [
     ["Mandarino", "Arancio"],
     ["Coca-Cola", "Fanta"],
     ["Bicchiere", "Boccale"]
-];
+] as const;

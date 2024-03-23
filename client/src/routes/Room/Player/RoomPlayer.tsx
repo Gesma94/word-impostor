@@ -86,7 +86,7 @@ export const RoomPlayer = () => {
     }
 
     const handleWsPlayerJoinResponse = (payload: TWsPlayerJoinRoomResponsePayload) => {
-        const newPlayers: TPlayer[] = payload.players.map(x => ({ uuid: x.playerUuid, username: x.username }));
+        const newPlayers: TPlayer[] = payload.players.map(x => ({ uuid: x.uuid, username: x.username }));
         setPlayers(newPlayers);
 
         if (!payload.hasStarted) {

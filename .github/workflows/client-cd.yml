@@ -22,8 +22,12 @@ jobs:
       with:
         node-version: 20.x
 
-    - name: NPM Install
+    - name: NPM Install Client
       run: npm install
+
+    - name: NPM Install Shared
+      run: npm install
+      working-directory: ./shared
     
     - name: NPM Build
       run: npm run build

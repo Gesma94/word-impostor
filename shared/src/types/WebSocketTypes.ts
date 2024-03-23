@@ -17,11 +17,11 @@ export type TWsPlayerJoinRoomPayload = {
 
 /** Websocket message payload sent from the server to a client in response of the player has joined the room */
 export type TWsPlayerJoinRoomResponsePayload = {
+    players: TPlayer[];
     hasStarted: boolean;
     currentRound: number;
     impostorHasHint: boolean;
     playerWord: string | null;
-    players: { username: string; playerUuid: string; }[];
 }
 
 
@@ -71,6 +71,11 @@ export type TWsMasterIsPlayingPayload = {
     playerUuid: string;
 }
 
+/** Websocket message payload sent from the server to the master after the master has toggled if he's playing or not */
+export type TWsMasterIsPlayingResponsePayload = {
+    isPlaying: boolean;
+}
+
 /** Websocket message payload sent from the server to multiple clients when a player has left a room */
 export type TWsPlayerLeftRoomPayload = {
     playerUuid: string;
@@ -103,6 +108,9 @@ export type TWsMasterJoinedRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CON
 /** Websocket message sent from the client to the server when the master toggle himself as player or non-player */
 export type TWsMasterIsPlayingMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.MASTER_IS_PLAYING, TWsMasterIsPlayingPayload>;
 
+/** Websocket message sent from the client to the server when the master toggle himself as player or non-player */
+export type TWsMasterIsPlayingResponseMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.MASTER_IS_PLAYING_RESPONSE, TWsMasterIsPlayingResponsePayload>;
+
 /** Websocket message sent from the server to multiple clients when a player has left a room */
 export type TWsPlayerLeftRoomMessage = TWsMessageBase<typeof WS_MSG_EVENTS_CONST.PLAYER_LEFT_ROOM, TWsPlayerLeftRoomPayload>;
 
@@ -119,6 +127,7 @@ export type TWebSocketMessage = TWsPlayerJoinRoomMessage
     | TWsPlayerJoinedRoomMessage
     | TWsPlayerJoinRoomResponseMessage
     | TWsMasterIsPlayingMessage
+    | TWsMasterIsPlayingResponseMessage
     | TWsStartRoundMessage
     | TWsRoundStartedMessage
     | TWsMasterJoinRoomResponseMessage;

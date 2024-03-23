@@ -4,7 +4,7 @@
   "description": "Shared for Word Impostor",
   "scripts": {
     "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
-    "build:prod": "npm run clean && tsc"
+    "build": "npm run clean && tsc"
   },
   "author": "Matteo Gesmundo",
   "license": "MIT",

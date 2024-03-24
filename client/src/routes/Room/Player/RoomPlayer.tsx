@@ -5,7 +5,7 @@ import { LoadScreen } from '../../../components/LoadScreen/LoadScreen';
 import { IconUrl } from '../../../components/IconUrl/IconUrl';
 import { VsLink } from 'solid-icons/vs';
 import { PlayersList } from '../../../components/PlayersList/PlayersList';
-import { createBusyContent } from '../../../signals/useBusyContent';
+import { useBusyContent } from '../../../signals/useBusyContent';
 import { SecretWord } from '../../../components/SecretWord/SecretWord';
 import { SharedUtils } from '@shared/utils/SharedUtils';
 import { TPlayer } from '@shared/types/SharedTypes';
@@ -26,7 +26,7 @@ export const RoomPlayer = () => {
     const [impostorHasHint, setImpostorHasHint] = createSignal(false);
     const [knownWord, setKnownWord] = createSignal<string | null>(null);
     const [isShowingRoom, setIsShowingRoom] = createSignal<boolean>(true);
-    const [ isBusy, _, setBusy, setNotBusy ] = createBusyContent(false, '');
+    const [ isBusy, _, setBusy, setNotBusy ] = useBusyContent(false, '');
     const [currentRound, setCurrentRound] = createSignal<number | null>(null);
 
     const orderedPlayers = () => Utils.getOrderedPlayers(players(), Utils.getUserUuid());

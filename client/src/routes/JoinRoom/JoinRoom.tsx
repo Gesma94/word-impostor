@@ -5,14 +5,14 @@ import { IconUrl } from '../../components/IconUrl/IconUrl';
 import { LoadScreen } from '../../components/LoadScreen/LoadScreen';
 import { TextError } from '../../components/TextError/TextError';
 import Utils from '../../common/Utils';
-import { createBusyContent } from '../../signals/useBusyContent';
+import { useBusyContent } from '../../signals/useBusyContent';
 
 export const JoinRoom = () => {
     const navigate = useNavigate();
 
     const [error, setError] = createSignal<string>('');
     const [roomId, setRoomId] = createSignal<string>('');
-    const [isBusy, busyContent, setBusy, setNotBusy] = createBusyContent(false, '');
+    const [isBusy, busyContent, setBusy, setNotBusy] = useBusyContent(false, '');
 
     const handleSecretWordChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (e) => {
         setRoomId(e.currentTarget.value);

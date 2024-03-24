@@ -2,7 +2,7 @@ import { Accessor, createSignal } from "solid-js"
 
 type TCreateBusyContentReturnType = [Accessor<boolean>, Accessor<string>, (newMessage: string) => void, () => void]
 
-export const createBusyContent = (initialIsBusy: boolean, initialBusyContent: string): TCreateBusyContentReturnType => {
+export const useBusyContent = (initialIsBusy: boolean, initialBusyContent: string): TCreateBusyContentReturnType => {
     const [isBusy, setIsBusy] = createSignal(initialIsBusy);
     const [busyContent, setBusyContent] = createSignal(initialBusyContent);
 

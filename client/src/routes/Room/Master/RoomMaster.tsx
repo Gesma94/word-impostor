@@ -1,7 +1,7 @@
 import type { JSX } from 'solid-js'
 import { For, Match, Show, Switch, createEffect, createRenderEffect, createSignal, onCleanup, onMount } from 'solid-js';
 import { redirect, useNavigate, useParams } from '@solidjs/router';
-import { createBusyContent } from '../../../signals/useBusyContent';
+import { useBusyContent } from '../../../signals/useBusyContent';
 import { LoadScreen } from '../../../components/LoadScreen/LoadScreen';
 import Utils from '../../../common/Utils';
 import { Toggle } from '../../../components/Toggle/Toggle';
@@ -22,7 +22,7 @@ export const RoomMaster = () => {
     const navigate = useNavigate();
     const params = useParams<TRoomMasterParams>();
 
-    const [ isBusy, busyContent, setBusy, setNotBusy ] = createBusyContent(false, '');
+    const [ isBusy, busyContent, setBusy, setNotBusy ] = useBusyContent(false, '');
 
     const [hasPermissionError] = createSignal(false);
     const [impostorHasHint, setImpostorHasHint] = createSignal(false);

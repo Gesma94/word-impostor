@@ -9,6 +9,7 @@ import { RoomMaster } from './routes/Room/Master/RoomMaster';
 import { Error } from './routes/Error/Error';
 import { PickUsername } from './routes/PickUsername/PickUsername';
 import { RoomPlayer } from './routes/Room/Player/RoomPlayer';
+import { Page404 } from './routes/Page404/Page404';
 
 render(() => (
     <Router>
@@ -20,7 +21,7 @@ render(() => (
             <Route path="/room/:roomId" component={RoomPlayer} />
         </Route>
         <Route path="/pick-username" component={PickUsername} />
-        <Route path="*" component={() => <p>404</p>} />
         <Route path="/error/:errorId" component={Error} />
+        <Route path="*" component={Page404} />
     </Router>
 ), document.getElementById('root')!);

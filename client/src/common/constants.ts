@@ -1,4 +1,5 @@
 import { PARAM_KEY } from "@shared/constants/SharedConstants";
+import { SharedUtils } from "@shared/utils/SharedUtils";
 
 /** Specifies the base URL for API calls */
 export const BASE_API_URL = import.meta.env.VITE_SERVER_BASE_URL;
@@ -15,10 +16,16 @@ export const LOCAL_STORAGE_CONST = {
 } as const;
 
 export const ROUTES = {
-    ROOM: "/room",
+    HOME: "/",
     ERROR: "/error",
-    ROOM_MASTER: function(roomId: string) {
-        return `${this.ROOM}/${roomId}/master`
+    JOIN_ROOM: "/join-room",
+    CREATE_ROOM: "/create-room",
+    PICK_USERNAME: "/pick-username",
+    ROOM_PLAYER: function(roomId?: string) {
+        return SharedUtils.isNullOrUndefined(roomId) ? '/room/:roomId/player' : `/room/${roomId}/player`
+    },
+    ROOM_MASTER: function(roomId?: string) {
+        return SharedUtils.isNullOrUndefined(roomId) ? '/room/:roomId/master' : `/room/${roomId}/master`
     }
 } as const;
 

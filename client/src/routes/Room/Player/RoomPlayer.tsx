@@ -11,6 +11,7 @@ import { SharedUtils } from '@shared/utils/SharedUtils';
 import { TPlayer } from '@shared/types/SharedTypes';
 import { TWebSocketMessage, TWsPlayerJoinRoomMessage, TWsPlayerJoinRoomResponsePayload, TWsPlayerJoinedRoomPayload, TWsPlayerLeftRoomPayload, TWsRoundStartedPayload } from '@shared/types/WebSocketTypes';
 import { WS_MSG_EVENTS_CONST } from '@shared/constants/WebSocket';
+import { BASE_WS_URL, ROUTES } from 'src/common/constants';
 
 type TRoomPlayerParams = {
     roomId: string;
@@ -40,12 +41,12 @@ export const RoomPlayer = () => {
     }
 
     const handleWsError = (_: Event) => {
-        navigate('/error');
+        navigate(ROUTES.ERROR);
     }
 
     const handleWsOpen = (_: Event) => {
         if (SharedUtils.isNullOrUndefined(params.roomId)) {
-            navigate('/error');
+            navigate(ROUTES.ERROR);
         }
 
         const wsEventCreateRoom: TWsPlayerJoinRoomMessage = {
@@ -131,9 +132,7 @@ export const RoomPlayer = () => {
     }
 
     onMount(() => {
-        const wsUrl = import.meta.env.VITE_SERVER_BASE_WS_URL;
-
-        webSocket = new WebSocket(wsUrl);
+        webSocket = new WebSocket(BASE_WS_URL);
 
         webSocket.addEventListener('open', handleWsOpen);
         webSocket.addEventListener('error', handleWsError);
@@ -201,7 +200,7 @@ export const RoomPlayer = () => {
                             </div>
                         </Show>
                         <hr />
-                        <p>Or, <IconUrl text='Join another room' icon={VsLink} url='/join-room' /></p>
+                        <p>Or, <IconUrl text='Join another room' icon={VsLink} url={ROUTES.JOIN_ROOM} /></p>
                     </div>
                 </div>
             </div>

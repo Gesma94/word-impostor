@@ -12,6 +12,7 @@ import { SharedUtils } from '@shared/utils/SharedUtils';
 import { TPlayer } from '@shared/types/SharedTypes';
 import { TWebSocketMessage, TWsMasterIsPlayingMessage, TWsMasterJoinRoomMessage, TWsMasterJoinRoomResponsePayload, TWsPlayerJoinedRoomPayload, TWsPlayerLeftRoomPayload, TWsRoundStartedPayload, TWsStartRoundMessage } from '@shared/types/WebSocketTypes';
 import { WS_MSG_EVENTS_CONST } from '@shared/constants/WebSocket';
+import { API_ROUTES, BASE_API_URL, BASE_WS_URL, ROUTES } from 'src/common/constants';
 
 type TRoomMasterParams = {
     roomId: string;
@@ -174,7 +175,7 @@ export const RoomMaster = () => {
         const isPlaying = isMasterPlaying();
 
         if (SharedUtils.isNullOrUndefined(webSocket)) {
-            redirect('/error');
+            redirect(ROUTES.ERROR);
             return;
         }
 
@@ -195,28 +196,24 @@ export const RoomMaster = () => {
         setBusy('Checking room permission');
 
         const searchParams = new URLSearchParams();
-        const apiUrl = import.meta.env.VITE_SERVER_BASE_URL;
-
         searchParams.append("masterUuid", Utils.getUserUuid());
 
         try {
-            const apiResponse = await fetch(`${apiUrl}/room/${roomId}/has-permission?${searchParams.toString()}`);
+            const apiResponse = await fetch(`${BASE_API_URL}/room/${roomId}/has-permission?${searchParams.toString()}`);
 
             if (!apiResponse.ok) {
-                navigate('/error');
+                navigate(ROUTES.ERROR);
                 return;
             }
 
             const apiResult = new Boolean(apiResponse.text());
 
             if (!apiResult) {
-                navigate('/error');
+                navigate(ROUTES.ERROR);
                 return;
             }
             
-            const wsUrl = import.meta.env.VITE_SERVER_BASE_WS_URL;
-
-            webSocket = new WebSocket(wsUrl);
+            webSocket = new WebSocket(BASE_WS_URL);
 
             webSocket.addEventListener('open', handleWsOpen);
             webSocket.addEventListener('error', handleWsError);
@@ -226,7 +223,7 @@ export const RoomMaster = () => {
             setNotBusy();
         }
         catch (e) {
-            navigate('/error');
+            navigate(ROUTES.ERROR);
         }
     });
 
@@ -296,7 +293,7 @@ export const RoomMaster = () => {
                             </div>
                             <button class='w-full mt-4' disabled={!isStartEnabled()} onClick={handleStartRoomClick}>{currentRound() === 0 ? 'Start Room' : 'New Round'}</button>
                             <hr />
-                            <p>Or, <IconUrl text='join a room' icon={VsLink} url='/join-room' /></p>
+                            <p>Or, <IconUrl text='join a room' icon={VsLink} url={ROUTES.JOIN_ROOM} /></p>
                         </div>
                     </div>
                 </Match>

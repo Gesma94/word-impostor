@@ -2,6 +2,7 @@ import { A, useLocation, useNavigate } from "@solidjs/router";
 import { For, JSX } from "solid-js";
 import Utils from "../../common/Utils";
 import { TbFeather } from "solid-icons/tb";
+import { ROUTES } from "src/common/constants";
 
 export const Topbar = () => {
     const location = useLocation();
@@ -13,9 +14,9 @@ export const Topbar = () => {
 
     const getLinks = () => {
         return [
-            { href: '/', text: 'Home' },
-            { href: '/join-room', text: 'Join Room' },
-            { href: isCreateRoom() ? location.pathname : '/create-room', text: 'Create Room ' }
+            { href: ROUTES.HOME, text: 'Home' },
+            { href: ROUTES.JOIN_ROOM, text: 'Join Room' },
+            { href: isCreateRoom() ? location.pathname : ROUTES.CREATE_ROOM, text: 'Create Room ' }
         ];
     }
 
@@ -30,7 +31,7 @@ export const Topbar = () => {
     }
 
     const handleChangeUsernameClick: JSX.EventHandler<HTMLSpanElement, MouseEvent> = () => {
-        navigate('/pick-username');
+        navigate(ROUTES.PICK_USERNAME);
     }
 
     return (

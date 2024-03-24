@@ -6,6 +6,7 @@ import { LoadScreen } from '../../components/LoadScreen/LoadScreen';
 import { TextError } from '../../components/TextError/TextError';
 import Utils from '../../common/Utils';
 import { useBusyContent } from '../../signals/useBusyContent';
+import { BASE_API_URL, ROUTES } from 'src/common/constants';
 
 export const JoinRoom = () => {
     const navigate = useNavigate();
@@ -21,13 +22,11 @@ export const JoinRoom = () => {
     const handleJoinRoomFormSubmit: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent> = async (e) => {
         e.preventDefault();
 
-        const apiUrl = import.meta.env.VITE_SERVER_BASE_URL;
-
         setError('');
         setBusy(`Connecting to room '${roomId()}'`);
 
         try {
-            const apiResponse = await fetch(`${apiUrl}/room/${roomId()}/exists`);
+            const apiResponse = await fetch(`${BASE_API_URL}/room/${roomId()}/exists`);
             await Utils.delay(1000);
             
             if (!apiResponse.ok) {
@@ -41,7 +40,7 @@ export const JoinRoom = () => {
                 return;
             }
             
-            navigate(`/room/${roomId()}`);
+            navigate(ROUTES.ROOM_PLAYER(roomId()));
         }
         catch (e) {
             setError(`Error while communicating with the server`);
@@ -70,7 +69,7 @@ export const JoinRoom = () => {
                             </div>
                         </Show>
                         <hr />
-                        <p>Or, <IconUrl text='create a room' icon={VsLink} url='/create-room' /></p>
+                        <p>Or, <IconUrl text='create a room' icon={VsLink} url={ROUTES.CREATE_ROOM} /></p>
                     </div>
                 </div>
             </div>

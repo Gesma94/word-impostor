@@ -10,18 +10,19 @@ import { Error } from './routes/Error/Error';
 import { PickUsername } from './routes/PickUsername/PickUsername';
 import { RoomPlayer } from './routes/Room/Player/RoomPlayer';
 import { Page404 } from './routes/Page404/Page404';
+import { ROUTES } from './common/constants';
 
 render(() => (
     <Router>
         <Route path="" component={LayoutWrapper}>
-            <Route path="/" component={Home} />
-            <Route path="/join-room" component={JoinRoom} />
-            <Route path="/room/:roomId/master" component={RoomMaster} />
-            <Route path="/create-room" component={CreateRoom} />
-            <Route path="/room/:roomId" component={RoomPlayer} />
+            <Route path={ROUTES.HOME} component={Home} />
+            <Route path={ROUTES.JOIN_ROOM} component={JoinRoom} />
+            <Route path={ROUTES.CREATE_ROOM} component={CreateRoom} />
+            <Route path={ROUTES.ROOM_MASTER()} component={RoomMaster} />
+            <Route path={ROUTES.ROOM_PLAYER()} component={RoomPlayer} />
         </Route>
-        <Route path="/pick-username" component={PickUsername} />
-        <Route path="/error/:errorId" component={Error} />
+        <Route path={ROUTES.ERROR} component={Error} />
+        <Route path={ROUTES.PICK_USERNAME} component={PickUsername} />
         <Route path="*" component={Page404} />
     </Router>
 ), document.getElementById('root')!);

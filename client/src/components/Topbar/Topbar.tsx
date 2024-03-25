@@ -3,21 +3,27 @@ import { For, JSX } from "solid-js";
 import Utils from "../../common/Utils";
 import { TbFeather } from "solid-icons/tb";
 import { ROUTES } from "src/common/constants";
+import { SharedUtils } from "@shared/utils/SharedUtils";
+
+type TTopbarLink = { href: string; text: string; }
 
 export const Topbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
-
-    const isCreateRoom = (): boolean => {
-        return (/^\/room\/[A-Z]{2}[0-9]{1}\/master/.test(location.pathname));
-    }
-
     const getLinks = () => {
-        return [
+        const baseLink : TTopbarLink[] = [
             { href: ROUTES.HOME, text: 'Home' },
             { href: ROUTES.JOIN_ROOM, text: 'Join Room' },
-            { href: isCreateRoom() ? location.pathname : ROUTES.CREATE_ROOM, text: 'Create Room ' }
+            { href: ROUTES.CREATE_ROOM, text: 'Create Room' }
         ];
+        
+        const regexResult = /^\/room\/([A-Z]{2}[0-9]{1})\/(master|player)/.exec(location.pathname);
+
+        if (SharedUtils.isNotNullOrUndefined(regexResult) && SharedUtils.isNotNullOrUndefined(regexResult[1])) {
+            baseLink.push({ href: location.pathname, text: `Room ${regexResult[1]}` });
+        }
+
+        return baseLink;
     }
 
     const getCssClasses = (href: string): string => {

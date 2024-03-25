@@ -13,6 +13,7 @@ import { TPlayer } from '@shared/types/SharedTypes';
 import { TWebSocketMessage, TWsMasterIsPlayingMessage, TWsMasterJoinRoomMessage, TWsMasterJoinRoomResponsePayload, TWsPlayerJoinedRoomPayload, TWsPlayerLeftRoomPayload, TWsRoundStartedPayload, TWsStartRoundMessage } from '@shared/types/WebSocketTypes';
 import { WS_MSG_EVENTS_CONST } from '@shared/constants/WebSocket';
 import { API_ROUTES, BASE_API_URL, BASE_WS_URL, ROUTES } from 'src/common/constants';
+import { PARAM_KEY } from '@shared/constants/SharedConstants';
 
 type TRoomMasterParams = {
     roomId: string;
@@ -196,7 +197,7 @@ export const RoomMaster = () => {
         setBusy('Checking room permission');
 
         const searchParams = new URLSearchParams();
-        searchParams.append("masterUuid", Utils.getUserUuid());
+        searchParams.append(PARAM_KEY.MASTER_UUID, Utils.getUserUuid());
 
         try {
             const apiResponse = await fetch(`${BASE_API_URL}/room/${roomId}/has-permission?${searchParams.toString()}`);

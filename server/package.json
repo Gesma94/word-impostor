@@ -9,8 +9,8 @@
     "clean-node-modules": "rimraf --glob node_modules",
     "build": "npm run clean && npm run build-shared && tsc",
     "clean-install": "npm run clean-node-modules && npm install",
-    "start:render": "set NODE_ENV=production && node ./dist/main.js",
-    "start:debug": "set NODE_ENV=development && nodemon src/main.ts",
+    "start:render": "cross-env NODE_ENV=production node ./dist/main.js",
+    "start:debug": "cross-env NODE_ENV=development nodemon src/main.ts",
     "check-circular-deps": "npx madge --circular --extensions js,ts,tsx,jsx ./src"
   },
   "author": "Matteo Gesmundo",
@@ -28,6 +28,7 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.30",
     "@types/ws": "^8.5.10",
+    "cross-env": "^7.0.3",
     "madge": "^6.1.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.4.3"

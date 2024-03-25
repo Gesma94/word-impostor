@@ -13,17 +13,17 @@ const app = express();
 
 /* Defines the port and the base URL for the server */
 const port = process.env.PORT || 7717;
-const baseUrl = SharedUtils.IsDevEnvironment() ? 'http://localhost' : 'https://wordimpostor.gesma.dev'
+const corsUrl = SharedUtils.IsDevEnvironment() ? 'http://localhost:5173' : 'https://wordimpostor.gesma.dev'
 
 /* Creates the WebSocket server */
 const wsServer = new Server({ noServer: true });
 
 /* Defines the CORS handler */
-const corsHandler = cors({ origin: baseUrl });
+const corsHandler = cors({ origin: corsUrl });
 
 /* Sets up the server to listen on the defined port */
 const server = app.listen(port, async () => {
-    console.log(`[server]: Server is running at ${baseUrl}:${port}`);
+    console.log(`[server]: Server is running at port ${port}`);
 });
 
 /* Set the server to listen also for WebSocket messages */

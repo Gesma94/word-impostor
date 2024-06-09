@@ -12,7 +12,7 @@ fastify.get("/ping", (_, reply) => {
     reply.status(500).send({ error: "is null" });
   }
 
-  reply.send({ hello: "pong" });
+  reply.send({ ping: "pong" });
 });
 
 fastify.get("/env", (_, reply) => {

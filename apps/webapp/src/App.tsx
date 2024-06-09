@@ -16,6 +16,7 @@ function App() {
     <>
       <h1>Hello world {counter}</h1>
       <button onClick={handleButtonClick}>Counter ++</button>
+      <p>Env: {import.meta.env.VITE_WEBAPP_COMMON_ENV}</p>
     </>
   );
 }

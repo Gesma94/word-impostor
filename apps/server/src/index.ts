@@ -1,3 +1,4 @@
+import "dotenv/config";
 import type { CommonType } from "@word-impostor/common/types";
 import { isNullOrUndefined } from "@word-impostor/common/utils";
 import Fastify from "fastify";
@@ -12,6 +13,10 @@ fastify.get("/ping", (_, reply) => {
   }
 
   reply.send({ hello: "pong" });
+});
+
+fastify.get("/env", (_, reply) => {
+  reply.send({ env: process.env.SERVER_COMMON_ENV });
 });
 
 fastify.listen({ port: 3000 }, (err, address) => {

@@ -1,0 +1,50 @@
+name: Staging Deploy
+
+on:
+  pull_request:
+    branches:
+      - staging
+    types:
+      - closed
+
+jobs:
+  deploy:
+    name: Deploy to Stage
+    runs-on: ubuntu-latest
+    environment: STAGING_ENV
+    if: github.event.pull_request.merged == true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm run build
+        env:
+          SERVER_COMMON_ENV: ${{ secrets.SERVER_COMMON_ENV }}
+          VITE_WEBAPP_COMMON_ENV: ${{ secrets.VITE_WEBAPP_COMMON_ENV }}
+
+      - name: Deploy To Render
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          api-key: ${{ secrets.RENDER_API_KEY }}
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+
+      - name: Deploy To Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: "ab30a017b87c1dcc6b925915c129206a"
+          projectName: "word-impostor"
+          directory: "./apps/webapp/dist"

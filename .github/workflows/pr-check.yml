@@ -26,9 +26,9 @@ jobs:
           elif [[ "${{ github.base_ref }}" == "main" && "${{ github.head_ref }}" == "release" ]]; then
             echo "Pull requests to main cannot come from release."
             exit 1
-          elfif [[ "${{ github.base_ref }}" == "staging" && "${{ github.head_ref }}" == "main" ]]; then
+          elif [[ "${{ github.base_ref }}" == "staging" && "${{ github.head_ref }}" == "main" ]]; then
             echo "Pull requests to staging can come from main."
-          elfif [[ "${{ github.base_ref }}" == "release" && "${{ github.head_ref }}" == "staging" ]]; then
+          elif [[ "${{ github.base_ref }}" == "release" && "${{ github.head_ref }}" == "staging" ]]; then
             echo "Pull requests to release can release from staging."
           elif [[ "${{ github.base_ref }}" == "main" ]]; then
             echo "Pull requests to main can come from any branch."

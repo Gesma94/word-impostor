@@ -9,7 +9,7 @@
     "lint": "pnpm exec eslint . --fix",
     "format": "pnpm exec prettier . --write",
     "test": "pnpm recursive run test",
-    "type-check": "pnpm recursive run typecheck"
+    "typecheck": "pnpm recursive run typecheck"
   },
   "keywords": [],
   "author": "",

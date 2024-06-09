@@ -16,7 +16,7 @@
     "build": "pnpm run clean && tsc",
     "build:dev": "npm run clean && tsc -p ./tsconfig.dev.json",
     "lint": "pnpm exec eslint . --fix",
-    "typecheck": "tsx --noEmit",
+    "typecheck": "tsc --noEmit",
     "format": "pnpm exec prettier . --write",
     "test": "echo \"Passed\""
   },

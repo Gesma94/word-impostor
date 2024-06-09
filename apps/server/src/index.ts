@@ -20,7 +20,7 @@ fastify.get("/env", (_, reply) => {
   reply.send({ env: process.env.SERVER_COMMON_ENV });
 });
 
-fastify.listen({ port }, (err, address) => {
+fastify.listen({ port, host: "0.0.0.0" }, (err, address) => {
   fastify.log.debug(`Listening at ${address}`);
   if (err) throw err;
 });

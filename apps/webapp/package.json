@@ -1,0 +1,37 @@
+{
+  "name": "word-impostor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf dist",
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "build": "pnpm run clean && vite build",
+    "lint": "pnpm exec eslint . --fix",
+    "format": "pnpm exec prettier . --write",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@word-impostor/common": "workspace:*",
+    "react": "19.0.0-rc-cc1ec60d0d-20240607",
+    "react-dom": "19.0.0-rc-cc1ec60d0d-20240607"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  },
+  "overrides": {
+    "@types/react": "npm:types-react@rc",
+    "@types/react-dom": "npm:types-react-dom@rc"
+  }
+}

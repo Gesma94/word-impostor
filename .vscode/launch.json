@@ -1,0 +1,36 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "webapp",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173", // Adjust the URL if your Vite dev server is running on a different port
+      "webRoot": "${workspaceFolder}/apps/webapp/src",
+      "sourceMaps": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "server",
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}/apps/server",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "dev"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/apps/server/tsconfig.json"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "webapp/server",
+      "configurations": ["server", "webapp"]
+    }
+  ]
+}

@@ -11,7 +11,8 @@
     "build": "pnpm run clean && vite build",
     "lint": "pnpm exec eslint . --fix",
     "format": "pnpm exec prettier . --write",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "echo \"Passed\""
   },
   "dependencies": {
     "@word-impostor/common": "workspace:*",

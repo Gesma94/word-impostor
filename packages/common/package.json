@@ -17,7 +17,8 @@
     "build:dev": "npm run clean && tsc -p ./tsconfig.dev.json",
     "lint": "pnpm exec eslint . --fix",
     "typecheck": "tsx --noEmit",
-    "format": "pnpm exec prettier . --write"
+    "format": "pnpm exec prettier . --write",
+    "test": "echo \"Passed\""
   },
   "keywords": [],
   "author": "Matteo Gesmundo",

@@ -41,10 +41,17 @@ jobs:
           api-key: ${{ secrets.RENDER_API_KEY }}
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
 
-      - name: Deploy To Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: "ab30a017b87c1dcc6b925915c129206a"
-          projectName: "word-impostor"
-          directory: "./apps/webapp/dist"
+      - name: Deploy to Cloudflare Pages Preview
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          cd apps/webapp/dist
+
+          curl -X POST "https://api.cloudflare.com/client/v4/accounts/ab30a017b87c1dcc6b925915c129206a/pages/projects/word-impostor/deployments" \
+          -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+          -H "Content-Type: application/json" \
+          --data '{
+            "branch": "'"staging"'",
+            "commit_hash": "'"$GITHUB_SHA"'",
+            "environment": "preview"
+          }'

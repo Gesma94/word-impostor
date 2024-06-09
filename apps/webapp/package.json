@@ -1,8 +1,9 @@
 {
-  "name": "word-impostor",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@word-impostor/webapp",
+  "version": "1.0.0",
   "type": "module",
+  "author": "Matteo Gesmundo",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "clean": "rimraf dist",
     "dev": "vite",

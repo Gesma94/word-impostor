@@ -6,5 +6,5 @@
     "rootDir": "./src",
     "lib": ["ES2022"]
   },
-  "include": ["./src"]
+  "include": ["./process-env.d.ts", "./src"]
 }

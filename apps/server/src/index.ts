@@ -10,7 +10,7 @@ const fastify = Fastify({
 
 fastify.get("/ping", (_, reply) => {
   if (isNullOrUndefined({ prop1: 7 } as CommonType)) {
-    reply.status(500).send({ error: "is null" });
+    reply.status(500).send({ error: "is null edited" });
   }
 
   reply.send({ ping: "pong" });

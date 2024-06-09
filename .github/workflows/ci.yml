@@ -3,10 +3,10 @@ name: CI
 on:
   - pull_request
   - push
-  
+
 jobs:
   build:
-    name: 'Test & Build'
+    name: "Test & Build"
     runs-on: ubuntu-latest
 
     steps:
@@ -23,10 +23,10 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        
+
       - name: Run formatter
         run: pnpm run format
-  
+
       - name: Run linter
         run: pnpm run lint
 

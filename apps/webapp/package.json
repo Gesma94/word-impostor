@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@word-impostor/common": "workspace:*",
-    "react": "19.0.0-rc-cc1ec60d0d-20240607",
+    "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc-cc1ec60d0d-20240607"
   },
   "devDependencies": {

@@ -1,0 +1,30 @@
+version: 2
+updates:
+  - package-ecosystem: "pnpm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore"
+      include: scope
+  - package-ecosystem: "pnpm"
+    directory: "/apps/webapp"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore"
+      include: scope
+  - package-ecosystem: "pnpm"
+    directory: "/apps/server"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore"
+      include: scope
+  - package-ecosystem: "pnpm"
+    directory: "/packages/common"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore"
+      include: scope

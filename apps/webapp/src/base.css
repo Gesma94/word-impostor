@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Tabular";
+  src:
+    local("./Tabular.Variable"),
+    url("./assets/fonts/Tabular-Variable.tff") format("truetype");
+}

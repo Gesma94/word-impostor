@@ -1,13 +1,15 @@
 {
-  "extends": ["./../../.eslintrc",
-  "plugin:react/recommended"],
+  "extends": [
+    "./../../.eslintrc",
+    "plugin:react/recommended",
+    "plugin:storybook/recommended"
+  ],
   "plugins": [
     "react-hooks"
   ],
- 
   "rules": {
     "react/jsx-uses-react": "off",
-"react/react-in-jsx-scope": "off",
+    "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
   },

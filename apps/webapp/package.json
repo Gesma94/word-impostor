@@ -15,9 +15,11 @@
     "test": "echo \"Passed\""
   },
   "dependencies": {
+    "@radix-ui/react-switch": "^1.1.0",
     "@word-impostor/common": "workspace:*",
     "react": "19.0.0-rc.0",
-    "react-dom": "19.0.0-rc.0"
+    "react-dom": "19.0.0-rc.0",
+    "tailwind-variants": "^0.2.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

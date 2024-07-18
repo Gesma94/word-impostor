@@ -1,1 +1,2 @@
-export * from "./commonType.js";
+export * from "./ServerToClientEvents.js";
+export * from "./ClientToServerEvents.js";

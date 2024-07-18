@@ -13,3 +13,6 @@ dist
 
 # Secret files
 .env
+
+# Storybook files
+*storybook.log

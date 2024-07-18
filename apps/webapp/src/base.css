@@ -6,5 +6,5 @@
   font-family: "Tabular";
   src:
     local("./Tabular.Variable"),
-    url("./assets/fonts/Tabular-Variable.tff") format("truetype");
+    url("./assets/fonts/Tabular-Variable.ttf") format("truetype");
 }

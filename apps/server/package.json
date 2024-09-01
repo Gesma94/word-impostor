@@ -23,7 +23,7 @@
     "fastify": "^4.28.1"
   },
   "devDependencies": {
-    "rimraf": "^5.0.7",
+    "rimraf": "^6.0.1",
     "tsx": "^4.16.0"
   }
 }
